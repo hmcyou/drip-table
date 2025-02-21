@@ -5,7 +5,7 @@
   </h1>
 </a>
 
-English | [简体中文](./README.zh-CN.md) | [Documentation](http://drip-table.jd.com/) | [Discussions](https://github.com/JDFED/drip-table/discussions)｜[Gitter](https://gitter.im/drip-table/community)
+English | [简体中文](./README.zh-CN.md) | [Documentation](http://drip-table.jd.com/) | [Discussions](https://github.com/JDFED/drip-table/discussions)｜[Gitter](https://gitter.im/drip-table/community) | [Official Wechat group](./Contact.md)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
@@ -23,9 +23,9 @@ English | [简体中文](./README.zh-CN.md) | [Documentation](http://drip-table.
 
 ## 📖 Introduction
 
-`Drip table`is a dynamic table solution for enterprise level middle and background launched by JD retail. The project is based on `React` and `JSON Schema` . It aims to reduce the difficulty of developing table and improve work efficiency by `simple configuration` to quickly generate page dynamic table.
+`Drip Table`is a dynamic table solution for enterprise level middle and background launched by JD retail. The project is based on `React` and `JSON Schema` . It aims to reduce the difficulty of developing table and improve work efficiency by `simple configuration` to quickly generate page dynamic table.
 
-`Drip table` contains serval sub projects: `drip-table`, `drip-table-generator`, `drip-table-driver-antd`.
+`Drip Table` contains serval sub projects: `drip-table`, `drip-table-generator`.
 
 The introduction of each sub-project are as follows:
 
@@ -33,7 +33,44 @@ The introduction of each sub-project are as follows:
 
 - `drip-table-generator`: a visual tool for producing configuration data that meets the `JSON Schema` standard in order to sent to `DripTable` for rendering a table and columns.
 
-- `drip-table-driver-antd`: a theme package which is composed of `Ant Design` components and icons.
+## Features
+
+* [x] Basic table
+* [x] Compound table
+* [x] Toolbar
+* [x] Renderer
+* [x] Text component
+* [x] Number component
+* [x] Image component
+* [x] Link component
+* [x] Tag component
+* [x] Button component
+* [x] Select component
+* [x] DataPicker component
+* [x] PopUpPage component
+* [x] RichText component
+* [x] Group component
+* [x] Custom component
+* [x] Header slot
+* [x] Footer slot
+* [x] Pagination
+* [x] Virtual list
+* [x] Sticky
+* [x] Sub table
+* [x] Row selection
+* [x] Row draggable
+* [x] Fixed column
+* [x] Show/Hide column
+* [x] Edit data
+* [x] Stripe
+* [x] Table with border
+* [x] Column resizing
+* [x] Size
+* [x] Global styles
+* [x] Empty table prompt
+* [x] Loading
+* [x] Card layout
+* [x] Filter
 
 ## ⬆️ Getting Start
 
@@ -43,7 +80,7 @@ The introduction of each sub-project are as follows:
 
 1. Install dependencies
 
-   The configuration side depend on the application side, please make sure that `drip-table` and `drip-table-driver-{drivername}` are installed before installing dependencies.
+   The configuration side depend on the application side, please make sure that `drip-table` has been installed before installing dependencies.
 
    > yarn
 
@@ -59,76 +96,67 @@ The introduction of each sub-project are as follows:
 
 2. Import at the entrance of a file
 
-   ```js
+   ```js | pure
    import DripTableGenerator from "drip-table-generator";
-   import "drip-table-generator/dist/index.css";
+   import "drip-table-generator/dist/index.min.css";
    ```
 
 3. Use components in pages
 
-   ```js
+   ```js | pure
    return <DripTableGenerator />;
    ```
 
    Then the configuration side can be rendered normally, as the sample screenshot below:
 
-   ![drip-table-generator](https://img10.360buyimg.com/imagetools/jfs/t1/209919/9/12490/4540144/61b71921Ee35a9a3c/e2f7167fef822f17.gif)
+   ![drip-table-generator](https://img10.360buyimg.com/imagetools/jfs/t1/83544/7/17486/359800/63620e25Ed7185bc1/caf5173d381cb4c0.png)
 
 ### The application side
 
 1. Install dependencies
 
-   Install the `drip-table` and a `drip-table` theme package at the same time:
+   Install the `drip-table`:
 
    > yarn
 
    ```sh
-   yarn add drip-table drip-table-driver-{drivername}
+   yarn add drip-table
    ```
 
    > npm
 
    ```sh
-   npm install --save drip-table drip-table-driver-{drivername}
+   npm install --save drip-table
    ```
-
-   Theme packages below are available:
-
-   - drip-table-driver-antd
 
 2. Import at the entrance of a file
 
    ```js
    // import drip-table
    import DripTable from "drip-table";
-   // import a theme package, take antd as an example
-   import DripTableDriverAntDesign from "drip-table-driver-antd";
-   // import ant-design css
-   import "antd/dist/antd.css";
    // import drip-table css
-   import "drip-table/dist/index.css";
+   import "drip-table/dist/index.min.css";
    ```
 
 3. Use components in pages
 
    ```js
    const schema = {
-    $schema: "http://json-schema.org/draft/2019-09/schema#",
-    size: "middle",
-    columns: [
-      {
-        key: "columnKey",
-        title: "Column Title",
-        "ui:type": "text",
-        "ui:props": { mode: "single" },
-        type: "string",
-        dataIndex: "dataIndexName",
-      },
-    ],
+     size: "middle",
+     columns: [
+       {
+         key: "columnKey",
+         title: "Column Title",
+         dataIndex: "dataIndexName",
+         component: "text",
+         options: {
+           mode: "single",
+         },
+       },
+     ],
    };
    return (
      <DripTable
-       driver={DripTableDriverAntDesign}
        schema={schema}
        dataSource={[]}
      />
@@ -137,7 +165,7 @@ The introduction of each sub-project are as follows:
 
    Then the application side can be rendered normally, as the sample screenshot below:
 
-   ![drip-table-demo](https://img13.360buyimg.com/imagetools/jfs/t1/217000/18/7528/191045/61b6d9ebE1c96d83b/a63b8edce7757bd8.png)
+   ![drip-table-demo](https://img13.360buyimg.com/imagetools/jfs/t1/136130/29/29966/659037/6363944fEd6a71fa1/2bec620460de4f3c.png)
 
 ## 🤝 Contribution
 
@@ -179,10 +207,14 @@ If you're interested in this project, you're welcome to create ✨[issue](https:
 
 - visit http://localhost:8000
 - `drip-table` demo page: /drip-table/guide/basic-demo
-- `drip-table-generator` demo page: /drip-table-generator/preview
+- `drip-table-generator` demo page: /drip-table-generator/demo
 
 For more commands, see [DEVELOP](./DEVELOP.md) .
 Please visit the official website address [drip-table](http://drip-table.jd.com/) 。
+
+## Communication
+
+[Official Wechat group](./Contact.md)
 
 ## License
 

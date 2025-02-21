@@ -1,6 +1,6 @@
 /**
- * This file is part of the jd-mkt5 launch.
- * @link     : https://ace.jd.com/
+ * This file is part of the drip-table project.
+ * @link     : https://drip-table.jd.com/
  * @author   : qianjing29 (qianjing29@jd.com)
  * @modifier : qianjing29 (qianjing29@jd.com)
  * @copyright: Copyright (c) 2020 JD Network Technology Co., Ltd.
@@ -8,16 +8,14 @@
 import { Switch } from 'antd';
 import React, { ReactNode } from 'react';
 
-import { DTGComponentPropertySchema } from '@/typing';
+import { DTGComponentBaseProperty } from '..';
 
-interface Props {
-  schema: DTGComponentPropertySchema;
-  value?: string | number | boolean;
-  onChange?: (value: string | number | boolean) => void;
-  onValidate?: (errorMessage: string) => void;
+interface Props extends DTGComponentBaseProperty<string | number | boolean> {
 }
 
 export default class SwitchComponent extends React.PureComponent<Props> {
+  public static componentName = 'switch';
+
   private get checked() {
     const uiProps = this.props.schema['ui:props'] || {};
     if (uiProps.checkedValue && uiProps.unCheckedValue) {

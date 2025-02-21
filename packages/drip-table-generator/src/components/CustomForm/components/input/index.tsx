@@ -1,6 +1,6 @@
 /**
- * This file is part of the jd-mkt5 launch.
- * @link     : https://ace.jd.com/
+ * This file is part of the drip-table project.
+ * @link     : https://drip-table.jd.com/
  * @author   : qianjing29 (qianjing29@jd.com)
  * @modifier : qianjing29 (qianjing29@jd.com)
  * @copyright: Copyright (c) 2020 JD Network Technology Co., Ltd.
@@ -8,16 +8,15 @@
 import { Input } from 'antd';
 import React from 'react';
 
-import { DTGComponentPropertySchema, StringDataSchema } from '@/typing';
+import { StringDataSchema } from '@/typing';
 
-interface Props {
-  schema: DTGComponentPropertySchema;
-  value?: string;
-  onChange?: (value: string) => void;
-  onValidate?: (errorMessage: string) => void;
-}
+import { DTGComponentBaseProperty } from '..';
+
+interface Props extends DTGComponentBaseProperty<string> {}
 
 export default class InputComponent extends React.PureComponent<Props> {
+  public static componentName = 'input';
+
   private transform(value: string) {
     const transform = (this.props.schema as StringDataSchema).transform;
     if (transform) {
@@ -44,7 +43,7 @@ export default class InputComponent extends React.PureComponent<Props> {
         value={this.props.value as string}
         placeholder={uiProps.placeholder as string}
         disabled={uiProps.disabled as boolean}
-        style={{ width: 420, ...uiProps.style }}
+        style={{ width: '100%', ...uiProps.style }}
         onChange={(e) => {
           const value = this.transform(e.target.value);
           this.props.onChange?.(value);
@@ -55,7 +54,7 @@ export default class InputComponent extends React.PureComponent<Props> {
                 this.props.onValidate?.(msg);
                 return msg;
               })
-              .catch((error) => { throw error; });
+              .catch((error: unknown) => { throw error; });
           }
         }}
       />

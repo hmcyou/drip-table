@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import './index.less';
 
-import styles from './index.module.less';
+import React, { Component } from 'react';
 
 interface Data {
   index: number;
@@ -44,17 +44,17 @@ export default class Draggable<T extends Data> extends Component<Props<T>, State
 
   public onDragEnter = (event: React.DragEvent<HTMLDivElement>) => {
     const ele = event.target as Element;
-    if (ele.className?.includes && ele.className.includes(styles['draggable-droppedcontent'])) {
-      ele.className = styles['draggable-droppingcontent'];
+    if (ele.className?.includes && ele.className.includes('jfe-drip-table-generator-draggable-droppedcontent')) {
+      ele.className = 'jfe-drip-table-generator-draggable-droppingcontent';
     }
-  }
+  };
 
   public onDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
     const ele = event.target as Element;
-    if (ele.className?.includes && ele.className.includes(styles['draggable-droppingcontent'])) {
-      ele.className = styles['draggable-droppedcontent'];
+    if (ele.className?.includes && ele.className.includes('jfe-drip-table-generator-draggable-droppingcontent')) {
+      ele.className = 'jfe-drip-table-generator-draggable-droppedcontent';
     }
-  }
+  };
 
   public compare() {
     return (a: T, b: T) => {
@@ -115,8 +115,8 @@ export default class Draggable<T extends Data> extends Component<Props<T>, State
     }
     this.props.onChange(data);
     const element = event.target as Element;
-    if (element.className.includes(styles['draggable-droppingcontent'])) {
-      element.className = styles['draggable-droppedcontent'];
+    if (element.className.includes('jfe-drip-table-generator-draggable-droppingcontent')) {
+      element.className = 'jfe-drip-table-generator-draggable-droppedcontent';
     }
   }
 
@@ -128,10 +128,11 @@ export default class Draggable<T extends Data> extends Component<Props<T>, State
     renderCell: (item: T) => JSX.Element,
     codeKey: string,
   ) {
-    return data.sort(this.compare()).map(item => (
+    data.sort(this.compare());
+    return data.map(item => (
       <div
         key={item[codeKey]}
-        className={styles['draggable-droppedcontent']}
+        className="jfe-drip-table-generator-draggable-droppedcontent"
         style={style}
         draggable
         onDragEnter={this.onDragEnter}
@@ -153,17 +154,11 @@ export default class Draggable<T extends Data> extends Component<Props<T>, State
     for (const item of value) {
       const width = typeof item.width === 'number'
         ? item.width
-        : Number(String(item.width).replace(/(px|%|r?em|pt|vw|cm|in|pc)$/gui, '')) || 0;
+        : Number(String(item.width).replace(/(px|%|r?em|pt|vw|cm|in|pc)$/ui, '')) || 0;
       containerWidth += Math.max(minWidth, width + 2, 120);
     }
     return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        width: `${containerWidth}px`,
-      }}
-      >
+      <div className="jfe-drip-table-generator-draggable-container" style={{ width: `${containerWidth}px` }}>
         { this.createDraggleComponent(value, style, uuid, render, codeKey) }
       </div>
     );

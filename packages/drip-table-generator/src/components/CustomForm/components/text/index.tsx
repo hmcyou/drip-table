@@ -1,6 +1,6 @@
 /**
- * This file is part of the jd-mkt5 launch.
- * @link     : https://ace.jd.com/
+ * This file is part of the drip-table project.
+ * @link     : https://drip-table.jd.com/
  * @author   : qianjing29 (qianjing29@jd.com)
  * @modifier : qianjing29 (qianjing29@jd.com)
  * @copyright: Copyright (c) 2020 JD Network Technology Co., Ltd.
@@ -8,18 +8,18 @@
 import { Input } from 'antd';
 import React from 'react';
 
-import { DTGComponentPropertySchema, StringDataSchema } from '@/typing';
+import { StringDataSchema } from '@/typing';
 
-interface Props {
-  schema: DTGComponentPropertySchema;
-  value?: string;
-  onChange?: (value: string) => void;
-  onValidate?: (errorMessage: string) => void;
+import { DTGComponentBaseProperty } from '..';
+
+interface Props extends DTGComponentBaseProperty<string> {
 }
 
 const TextArea = Input.TextArea;
 
 export default class TextComponent extends React.PureComponent<Props> {
+  public static componentName = 'text';
+
   private transform(value: string) {
     const transform = (this.props.schema as StringDataSchema).transform;
     if (transform) {
@@ -42,14 +42,15 @@ export default class TextComponent extends React.PureComponent<Props> {
 
     return (
       <TextArea
-        value={this.props.value as string}
+        value={this.props.value as string ?? config.default}
         placeholder={uiProps.placeholder as string}
         disabled={uiProps.disabled as boolean}
-        style={{ width: 420, ...uiProps.style }}
-        autoSize={{
+        style={{ width: '100%', ...uiProps.style }}
+        autoSize={uiProps.autoSize as boolean || {
           minRows: uiProps.minRows as number,
           maxRows: uiProps.maxRows as number,
         }}
+        rows={uiProps.rows as number}
         onChange={(e) => {
           const formattedValue = this.transform(e.target.value);
           this.props.onChange?.(formattedValue);
@@ -60,7 +61,7 @@ export default class TextComponent extends React.PureComponent<Props> {
                 this.props.onValidate?.(message);
                 return message;
               })
-              .catch((error) => { throw error; });
+              .catch((error: unknown) => { throw error; });
           }
         }}
       />

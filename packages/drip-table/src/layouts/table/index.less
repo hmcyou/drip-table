@@ -1,0 +1,506 @@
+/**
+ * This file is part of the drip-table project.
+ * @link     : https://drip-table.jd.com/
+ * @author   : Emil Zhai (root@derzh.com)
+ * @modifier : Emil Zhai (root@derzh.com)
+ * @copyright: Copyright (c) 2021 JD Network Technology Co., Ltd.
+ */
+
+@import url("@@drip-table-src/styles/theme/default.less");
+
+@prefixCls: jfe-drip-table-layout-table;
+
+.@{prefixCls} {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: @drip-table-text-color;
+  font-variant: tabular-nums;
+  line-height: 1.5715;
+  list-style: none;
+  font-feature-settings: "tnum", "tnum";
+  position: relative;
+  font-size: 14px;
+  background: #ffffff;
+  border-radius: 2px;
+
+  &-sticky-holder {
+    position: sticky;
+    z-index: 3;
+  }
+
+  &-thead > tr > th {
+    position: relative;
+    color: @drip-table-text-color;
+    font-weight: 500;
+    text-align: left;
+    background: #fafafa;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background .3s ease;
+  }
+
+  &-tbody > tr > td,
+  &-virtual-cell {
+    border-bottom: 1px solid #f0f0f0;
+    transition: background .3s;
+  }
+
+  & table {
+    width: 100%;
+    text-align: left;
+    border-radius: 2px 2px 0 0;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  &-tbody > tr > td,
+  &-thead > tr > th,
+  & tfoot > tr > td,
+  & tfoot > tr > th,
+  & .@{prefixCls}-virtual-cell {
+    &:not(.@{prefixCls}--slot) {
+      padding: 16px;
+    }
+
+    position: relative;
+    overflow-wrap: break-word;
+  }
+
+  &-tbody > tr.@{prefixCls}-row:hover > td,
+  &-virtual-list > div > .@{prefixCls}-virtual-cell.@{prefixCls}--row-hover {
+    background: #fafafa;
+  }
+
+  &-tbody > tr.@{prefixCls}-row-selected > td,
+  &-virtual-list > div > .@{prefixCls}-virtual-cell.@{prefixCls}--row-selected {
+    background: #e6f7ff;
+    border-color: #00000008;
+  }
+
+  &-tbody > tr.@{prefixCls}-row-selected:hover > td,
+  &-virtual-list > div > .@{prefixCls}-virtual-cell.@{prefixCls}--row-selected-hover {
+    background: #dcf4ff;
+  }
+
+  &-footer {
+    padding: 16px;
+    color: @drip-table-text-color;
+    background: #fafafa;
+    border-radius: 0 0 2px 2px;
+  }
+
+  // ====================================
+  // ==             Align              ==
+  // ====================================
+
+  &-cell--top { vertical-align: top; }
+  &-cell--middle { vertical-align: middle; }
+  &-cell--bottom { vertical-align: bottom; }
+  &-cell--stretch > * { height: 100%; }
+
+  &-virtual-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    &--top { justify-content: flex-start; }
+    &--middle { justify-content: center; }
+    &--bottom { justify-content: flex-end; }
+    &--stretch { justify-content: stretch; }
+    &--stretch > * { flex: 1 1 auto; }
+  }
+
+  // ====================================
+  // ==             Column             ==
+  // ====================================
+
+  &-column-title {
+    display: inline;
+
+    * {
+      display: inline;
+    }
+  }
+
+  &-column-title__question-icon {
+    display: inline-block;
+    color: inherit;
+    font-style: normal;
+    line-height: 0;
+    text-align: center;
+    text-transform: none;
+    vertical-align: -.125em;
+    text-rendering: optimizelegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  &-column-title-selection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &-column-selection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &-column-draggable-row {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &--drag-in {
+      background-color: #f7f7f7;
+    }
+
+    &__draggable {
+      display: flex;
+      width: 20px;
+      cursor: grab;
+    }
+  }
+
+  // ====================================
+  // ==           Expandable           ==
+  // ====================================
+  &-expand-icon-col {
+    width: 48px;
+  }
+
+  &-row-expand-icon-cell {
+    text-align: center;
+  }
+
+  &-row-indent {
+    float: left;
+    height: 1px;
+  }
+
+  &-row-expand-icon-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &-row-expand-icon {
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+    display: inline-flex;
+    float: left;
+    box-sizing: border-box;
+    width: 17px;
+    height: 17px;
+    padding: 0;
+    color: inherit;
+    line-height: 17px;
+    background: #ffffff;
+    border: 1px solid #f0f0f0;
+    border-radius: 2px;
+    outline: none;
+    transform: scale(.9412);
+    transition: all .3s;
+    user-select: none;
+  }
+
+  &-row-expand-icon:focus,
+  &-row-expand-icon:hover {
+    color: @drip-table-primary-active-color;
+  }
+
+  &-row-expand-icon:active {
+    color: #096dd9;
+  }
+
+  &-row-expand-icon:active,
+  &-row-expand-icon:focus,
+  &-row-expand-icon:hover {
+    border-color: currentcolor;
+  }
+
+  &-row-expand-icon::after,
+  &-row-expand-icon::before {
+    position: absolute;
+    background: currentcolor;
+    transition: transform .3s ease-out;
+    content: "";
+  }
+
+  &-row-expand-icon::before {
+    top: 7px;
+    right: 3px;
+    left: 3px;
+    height: 1px;
+  }
+
+  &-row-expand-icon::after {
+    top: 3px;
+    bottom: 3px;
+    left: 7px;
+    width: 1px;
+    transform: rotate(90deg);
+  }
+
+  &-row-expand-icon-collapsed::before {
+    transform: rotate(-180deg);
+  }
+
+  &-row-expand-icon-collapsed::after {
+    transform: rotate(0deg);
+  }
+
+  &-row-expand-icon-spaced {
+    background: transparent;
+    border: 0;
+    visibility: hidden;
+  }
+
+  &-row-expand-icon-spaced::after,
+  &-row-expand-icon-spaced::before {
+    display: none;
+    content: none;
+  }
+
+  tr&-expanded-row:hover > td,
+  tr&-expanded-row > td {
+    background: #fbfbfb;
+  }
+
+  // ====================================
+  // ==             Border             ==
+  // ====================================
+  &&--bordered {
+    & > .@{prefixCls}-container > .@{prefixCls}-body > table > tbody > tr > td,
+    & > .@{prefixCls}-container > .@{prefixCls}-body > table > tfoot > tr > td,
+    & > .@{prefixCls}-container > .@{prefixCls}-body > table > tfoot > tr > th,
+    & > .@{prefixCls}-container > .@{prefixCls}-body > table > thead > tr > th,
+    & > .@{prefixCls}-container > .@{prefixCls}-content > table > tbody > tr > td,
+    & > .@{prefixCls}-container > .@{prefixCls}-content > table > tfoot > tr > td,
+    & > .@{prefixCls}-container > .@{prefixCls}-content > table > tfoot > tr > th,
+    & > .@{prefixCls}-container > .@{prefixCls}-content > table > thead > tr > th,
+    & > .@{prefixCls}-container > .@{prefixCls}-header > table > tbody > tr > td,
+    & > .@{prefixCls}-container > .@{prefixCls}-header > table > tfoot > tr > td,
+    & > .@{prefixCls}-container > .@{prefixCls}-header > table > tfoot > tr > th,
+    & > .@{prefixCls}-container > .@{prefixCls}-header > table > thead > tr > th,
+    & > .@{prefixCls}-container > .@{prefixCls}-summary > table > tbody > tr > td,
+    & > .@{prefixCls}-container > .@{prefixCls}-summary > table > tfoot > tr > td,
+    & > .@{prefixCls}-container > .@{prefixCls}-summary > table > tfoot > tr > th,
+    & > .@{prefixCls}-container > .@{prefixCls}-summary > table > thead > tr > th,
+    & > .@{prefixCls}-container > .@{prefixCls}-virtual-list > div > .@{prefixCls}-virtual-cell {
+      &:not(.@{prefixCls}--slot) {
+        &:first-child {
+          border-left: 1px solid #f0f0f0;
+        }
+
+        border-right: 1px solid #f0f0f0;
+      }
+    }
+
+    & > .@{prefixCls}-container > .@{prefixCls}-content > table > tbody > tr:last-child > td,
+    & > .@{prefixCls}-container > .@{prefixCls}-content > table > tfoot > tr:last-child > td {
+      &:not(.@{prefixCls}--slot) {
+        &:first-child {
+          border-bottom-left-radius: var(--drip-table-border-radius);
+        }
+
+        &:last-child {
+          border-bottom-right-radius: var(--drip-table-border-radius);
+        }
+      }
+    }
+
+    & > .@{prefixCls}-container > .@{prefixCls}-content > table,
+    & > .@{prefixCls}-container > .@{prefixCls}-header > table {
+      border-top: 1px solid #f0f0f0;
+      border-top-left-radius: var(--drip-table-border-radius);
+      border-top-right-radius: var(--drip-table-border-radius);
+    }
+
+    & > .@{prefixCls}-footer {
+      border: 1px solid #f0f0f0;
+      border-top: 0;
+    }
+
+    & > .@{prefixCls}-container > .@{prefixCls}-content > table > tfoot > tr > th,
+    & > .@{prefixCls}-container > .@{prefixCls}-content > table > thead > tr > th {
+      &:not(.@{prefixCls}--slot) {
+        &:first-child {
+          border-top-left-radius: var(--drip-table-border-radius);
+        }
+
+        &:last-child {
+          border-top-right-radius: var(--drip-table-border-radius);
+        }
+      }
+    }
+  }
+
+  &&--border-radius:not(&--bordered) {
+    .@{prefixCls}-thead > tr > th {
+      border-bottom: none;
+    }
+
+    & > .@{prefixCls}-container > .@{prefixCls}-content > table > tfoot > tr > th,
+    & > .@{prefixCls}-container > .@{prefixCls}-content > table > thead > tr > th {
+      &:not(.@{prefixCls}--slot) {
+        &:first-child {
+          border-top-left-radius: var(--drip-table-border-radius);
+          border-bottom-left-radius: var(--drip-table-border-radius);
+        }
+
+        &:last-child {
+          border-top-right-radius: var(--drip-table-border-radius);
+          border-bottom-right-radius: var(--drip-table-border-radius);
+        }
+      }
+    }
+  }
+
+  // ====================================
+  // ==             Fixed              ==
+  // ====================================
+
+  &-cell-fix-left,
+  &-cell-fix-right {
+    position: sticky !important;
+    z-index: 2;
+    background: #ffffff;
+  }
+
+  &-cell-fix-left-first::after,
+  &-cell-fix-left-last::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: -1px;
+    width: 30px;
+    transform: translateX(100%);
+    transition: box-shadow .3s;
+    content: "";
+    pointer-events: none;
+  }
+
+  &-cell-fix-right-first::after,
+  &-cell-fix-right-last::after {
+    position: absolute;
+    top: 0;
+    bottom: -1px;
+    left: 0;
+    width: 30px;
+    transform: translateX(-100%);
+    transition: box-shadow .3s;
+    content: "";
+    pointer-events: none;
+  }
+
+  & &-container::after,
+  & &-container::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    width: 30px;
+    transition: box-shadow .3s;
+    content: "";
+    pointer-events: none;
+  }
+
+  & &-container::before {
+    left: 0;
+  }
+
+  & &-container::after {
+    right: 0;
+  }
+
+  &-ping-left:not(&-has-fix-left) &-container {
+    position: relative;
+  }
+
+  &-ping-left:not(&-has-fix-left) &-container::before {
+    box-shadow: inset 10px 0 8px -8px #00000026;
+  }
+
+  &-ping-left &-cell-fix-left-first::after,
+  &-ping-left &-cell-fix-left-last::after {
+    box-shadow: inset 10px 0 8px -8px #00000026;
+  }
+
+  &-ping-left &-cell-fix-left-last::before {
+    background-color: transparent !important;
+  }
+
+  &-ping-right:not(&-has-fix-right) &-container {
+    position: relative;
+  }
+
+  &-ping-right:not(&-has-fix-right) &-container::after {
+    box-shadow: inset -10px 0 8px -8px #00000026;
+  }
+
+  &-ping-right &-cell-fix-right-first::after,
+  &-ping-right &-cell-fix-right-last::after {
+    box-shadow: inset -10px 0 8px -8px #00000026;
+  }
+
+  // ====================================
+  // ==              Size              ==
+  // ====================================
+  &&-small &-footer,
+  &&-small &-tbody > tr > td,
+  &&-small &-thead > tr > th,
+  &&-small &-title,
+  &&-small tfoot > tr > td,
+  &&-small tfoot > tr > th,
+  &&-small .@{prefixCls}-virtual-cell {
+    &:not(.@{prefixCls}--slot) {
+      padding: 8px;
+    }
+  }
+
+  &&-middle &-footer,
+  &&-middle &-tbody > tr > td,
+  &&-middle &-thead > tr > th,
+  &&-middle &-title,
+  &&-middle tfoot > tr > td,
+  &&-middle tfoot > tr > th,
+  &&-middle .@{prefixCls}-virtual-cell {
+    &:not(.@{prefixCls}--slot) {
+      padding: 12px 8px;
+    }
+  }
+
+  // ====================================
+  // ==             stripe             ==
+  // ====================================
+
+  &&--stripe {
+    & > .@{prefixCls}-container > .@{prefixCls}-body > table > tbody > tr,
+    & > .@{prefixCls}-container > .@{prefixCls}-content > table > tbody > tr {
+      &:nth-child(2n+2) {
+        background: #fafafa;
+      }
+    }
+  }
+}
+
+.@{prefixCls}-row-slot__error {
+  padding: 3px 8px;
+  font-size: 14px;
+  color: #ff0000;
+  background: #feebeb;
+  border: 1px solid #ff0000;
+  box-sizing: border-box;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}

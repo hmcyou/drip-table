@@ -44,7 +44,7 @@
 1. 安装依赖
 
    ```sh
-   lerna bootstrap
+   yarn
    ```
 
 2. 构建依赖包
@@ -93,10 +93,9 @@
 │ ├── index.css                    // 文档官网首页 CSS
 │ ├── index.md                     // 文档官网首页入口 markdown
 │ ├── index.tsx                    // 文档官网首页
-│ └── Loading.js                   // 文档官网 Loading 组件
+│ └── loading.js                   // 文档官网 Loading 组件
 └── packages                       // 源代码入口
   ├── drip-table                   // drip-table 代码
-  ├── drip-table-driver-antd       // drip-table antd 主题包
   └── drip-table-generator         // drip-table 可视化生成器
 ```
 
@@ -109,6 +108,15 @@
 
 - `drip-table` 开发详情见 [README](./packages/drip-table/README.zh-CN.md) 。
 - `drip-table-generator` 开发详情见 [README](./packages/drip-table-generator/README.zh-CN.md) 。
+
+## NPM包发布
+
+如果更新了`drip-table`，则先更新 [package.json](packages/drip-table/package.json) 和 [changelog](docs/drip-table/changelog.md) ，进入[ drip-table 目录](packages/drip-table)执行 `npm publish`。
+
+如果更新了`drip-table-generator`，则先更新 [package.json](packages/drip-table-generator/package.json) 和 [changelog](docs/drip-table-generator/changelog.md) ，进入 [drip-table-generator 目录](packages/drip-table-generator)执行 `npm publish` 。
+
+> 如果没有权限，则进[官方交流微信群](./Contact.md)，找群主新增权限，`npm owner add <username> <package-name>`
+
 
 ## 官网发布
 

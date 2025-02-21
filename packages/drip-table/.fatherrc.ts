@@ -1,29 +1,33 @@
-import { IBundleOptions } from 'father-build/src/types';
+import { defineConfig } from 'father';
 import path from 'path';
-import eslint from '@rollup/plugin-eslint';
+import TerserWebpackPlugin from 'terser-webpack-plugin';
 
-const options: IBundleOptions = {
-  cjs: { type: 'rollup' },
-  esm: {
-    type: 'rollup',
-    importLibToEs: true,
+export default defineConfig({
+  alias: {
+    '@@drip-table-src': path.resolve(__dirname, 'src/'),
   },
-  cssModules: true,
-  extractCSS: true,
-  extraBabelPlugins: [],
-  extraRollupPlugins: [{
-    before: "babel",
-    plugins: [
-      eslint(path.resolve(__dirname, '.eslintrc.js')),
-      ,
-    ],
-  }],
-  pkgs: [
-    'drip-table',
-  ],
-  preCommit: {
-    eslint: true,
+  umd: {
+    entry: {
+      'src/index': {
+        output: 'dist',
+      },
+    },
+    chainWebpack(config, { webpack }) {
+      config.entry('index').add(path.join(__dirname, './src/index.ts'));
+      config.entry('index.min').add(path.join(__dirname, './src/index.ts'));
+      config.optimization.minimizer('css').use(TerserWebpackPlugin, [{
+        test: /min/u,
+        terserOptions: {
+          module: true,
+        },
+        minify: v => new Promise(resolve => resolve({ code: v.value })),
+      }]);
+      return config;
+    },
   },
-};
-
-export default options;
+  cjs: {
+    platform: 'browser',
+    output: 'lib',
+  },
+  esm: { output: 'es' },
+});

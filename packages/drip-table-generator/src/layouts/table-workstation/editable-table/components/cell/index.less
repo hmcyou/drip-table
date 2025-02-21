@@ -1,0 +1,115 @@
+/**
+ * This file is part of the drip-table project.
+ * @link     : https://drip-table.jd.com/
+ * @author   : helloqian12138 (johnhello12138@163.com)
+ * @modifier : helloqian12138 (johnhello12138@163.com)
+ * @copyright: Copyright (c) 2020 JD Network Technology Co., Ltd.
+ */
+
+@import url("../../../../../styles/theme.less");
+
+@prefixCls: jfe-drip-table-generator-workstation-table-cell;
+
+.@{prefixCls}-group-wrapper {
+  min-height: 40px;
+  height: max-content;
+  margin: 1px;
+  width: 100%;
+  padding: 6px;
+  border: 1px solid transparent;
+}
+
+.@{prefixCls}-group-wrapper:hover {
+  border-color: var(--drip-table-border-color, @border-color);
+}
+
+.@{prefixCls}-group-row {
+  margin: 0 !important;
+  padding: 0 1px;
+  text-align: center;
+}
+
+.@{prefixCls}-group-col {
+  border: 1px solid transparent;
+  text-align: center;
+  word-break: break-word;
+  padding: 6px;
+  display: flex;
+  width: fit-content;
+
+  &:hover,
+  &.empty {
+    border: 1px dashed var(--drip-table-border-color, @border-color);
+  }
+
+  &.checked {
+    border: 1px solid var(--drip-table-border-color, @border-color);
+    background:
+      linear-gradient(
+        45deg,
+        var(--drip-table-background-color, @background-color) 0,
+        var(--drip-table-background-color, @background-color) 25%,
+        transparent 25%,
+        transparent 50%,
+        var(--drip-table-background-color, @background-color) 50%,
+        var(--drip-table-background-color, @background-color) 75%,
+        transparent 75%,
+        transparent 100%
+      );
+    background-size: 50px 50px;
+  }
+}
+
+.@{prefixCls}-group-empty {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.@{prefixCls}-group-tools {
+  width: max-content;
+  height: 28px;
+  position: absolute;
+  right: -12px;
+  top: -12px;
+  z-index: 8;
+  background-color: var(--drip-table-primary-color, @primary-color);
+  display: flex;
+  padding: 2px 4px;
+  color: #ffffff;
+  box-shadow: 0 -1px 4px -1px rgba(0 0 0 / 85%);
+}
+
+.@{prefixCls}-group-close {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  position: absolute;
+  right: -12px;
+  top: -12px;
+  z-index: 8;
+
+  &.primary {
+    background-color: #ffffff;
+    color: var(--drip-table-primary-color, @primary-color);
+    fill: var(--drip-table-primary-color, @primary-color);
+    cursor: pointer;
+    border: 1px solid var(--drip-table-border-color, @border-color);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+  }
+
+  &.danger {
+    background-color: #ffffff;
+    color: #ff4d4f;
+    fill: #ff4d4f;
+    cursor: pointer;
+    border: 1px solid #ff4d4f;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+  }
+}

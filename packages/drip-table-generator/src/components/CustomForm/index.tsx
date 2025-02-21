@@ -7,32 +7,42 @@
  */
 
 import 'rc-color-picker/assets/index.css';
+import './index.less';
 
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Alert, Col, Collapse, Form, Popover, Row, Tabs } from 'antd';
-import { DripTableDriver } from 'drip-table';
+import { TabsPosition, TabsProps } from 'antd/lib/tabs';
+import { DripTableProps, DripTableRecordTypeBase } from 'drip-table';
 import React, { Component } from 'react';
 
+import { safeEvaluate } from '@/utils/sandbox';
 import RichText from '@/components/RichText';
 import { DTGComponentPropertySchema } from '@/typing';
 
-import BuiltInComponents from './components';
+import BuiltInComponents, { CustomComponentProps, DTGComponentBaseProperty } from './components';
 
-interface CustomComponentProps {
-  schema: DTGComponentPropertySchema;
-  value?: string;
-  onChange?: (value: string) => void;
-  onValidate?: (errorMessage: string) => void;
-}
 interface Props<T> {
   configs: DTGComponentPropertySchema[];
   groupType?: boolean | 'collapse' | 'tabs';
+  labelAlign?: 'left' | 'right';
+  tabPosition?: TabsPosition;
+  tabProps?: TabsProps;
+  wrapperClassName?: string;
   extraComponents?: Record<string, new <P extends CustomComponentProps>(props: P) => React.PureComponent<P>>;
+  replacedComponents?: string[];
   data?: T;
   primaryKey?: string;
   extendKeys?: string[];
-  theme?: DripTableDriver;
-  decodeData?: (data?: T) => Record<string, unknown>;
+  mode?: 'old';
+  icons?: DripTableProps<DripTableRecordTypeBase>['icons'];
+  skippedKeys?: string[];
+  /**
+   * 将原本的数据转换成 FormData
+   */
+  decodeData?: (data: T, defaultData?: Record<string, unknown>) => Record<string, unknown>;
+  /**
+   * 将 FormData 转成 原本数据
+   */
   encodeData: (formData: Record<string, unknown>) => T;
   onChange?: (data?: T) => void;
 }
@@ -64,23 +74,61 @@ export default class CustomForm<T> extends Component<Props<T>, State> {
     }
   }
 
+  public formForceUpdate(data?: T) {
+    this.setState({ formValues: this.decodeData(data || this.props.data), helpMsg: {} });
+  }
+
+  public flattenObject(obj, prefix = '', skippedKeys = [] as string[]) {
+    let result = {};
+    // 数组不再划分 交给 Array 组件处理
+    if (Array.isArray(obj)) {
+      const key = prefix.endsWith('.') ? prefix.slice(0, -1) : prefix;
+      result[key] = obj;
+    } else {
+      Object.keys(obj).forEach((key) => {
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
+          const keySkipped = skippedKeys.includes(`${prefix}${key}`);
+          if (keySkipped) {
+            result[prefix + key] = obj[key];
+          } else {
+            result = { ...result, ...this.flattenObject(obj[key], `${prefix}${key}.`, skippedKeys) };
+          }
+        } else {
+          result[prefix + key] = obj[key];
+        }
+      });
+    }
+    return result;
+  }
+
   public decodeData(material?: T) {
     let obj: { [key: string]: unknown } = {};
     // 注入 defaultValue
     this.props.configs.forEach((item) => {
-      if (typeof item.default !== 'undefined') { obj[item.name] = item.default; }
+      if (item.default !== void 0 && this.visible(item)) { obj[item.name] = item.default; }
     });
     if (material) {
-      Object.keys(material)
-        .filter(key => (this.props.extendKeys ? !this.props.extendKeys.includes(key) : true))
-        .forEach((key) => { obj[key] = material[key]; });
-      if (this.props.extendKeys) {
-        this.props.extendKeys.forEach(extKey =>
-          Object.keys(material[extKey] || {})
-            .forEach((key) => { obj[`${extKey}.${key}`] = (material[extKey] || {})[key]; }));
+      if (this.props.mode === 'old') {
+        Object.keys(material)
+          .filter(key => (this.props.extendKeys ? !this.props.extendKeys.includes(key) : true))
+          .forEach((key) => { obj[key] = material[key]; });
+        if (this.props.extendKeys) {
+          this.props.extendKeys.forEach(extKey =>
+            Object.keys(material[extKey] || {})
+              .forEach((key) => { obj[`${extKey}.${key}`] = (material[extKey] || {})[key]; }));
+        }
+      } else if (this.props.extendKeys) {
+        Object.keys(material).forEach((key) => {
+          obj = this.props.extendKeys?.includes(key)
+            ? { ...obj, ...this.flattenObject(material[key], `${key}.`, this.props.skippedKeys) }
+            : { ...obj, [key]: material[key] };
+        });
+      } else {
+        obj = this.flattenObject(material, '', this.props.skippedKeys);
       }
+
       if (this.props.decodeData) {
-        obj = { ...obj, ...this.props.decodeData(material) };
+        obj = { ...obj, ...this.props.decodeData(material, obj) };
       }
     }
     return obj;
@@ -91,8 +139,7 @@ export default class CustomForm<T> extends Component<Props<T>, State> {
     if (typeof config.visible === 'function') {
       return config.visible(formValues[config.name], formValues);
     } if (typeof config.visible === 'string') {
-      const visible = new Function('formData', config.visible);
-      return visible(formValues);
+      return safeEvaluate(config.visible, { formData: formValues }, false);
     } if (typeof config.visible === 'boolean') {
       return config.visible;
     }
@@ -102,17 +149,22 @@ export default class CustomForm<T> extends Component<Props<T>, State> {
   public async submitData() {
     const { formValues, helpMsg } = this.state;
     let count = 0;
+    const formData = Object.assign({}, formValues);
     const configs = this.props.configs.filter(config => this.visible(config));
     await configs.forEach(async (cfg) => {
-      const msg = cfg.validate ? await cfg.validate(formValues[cfg.name] as string) : '';
+      const value = formData[cfg.name] || cfg.default;
+      const msg = cfg.validate ? await cfg.validate(value) : '';
       if (msg) {
         helpMsg[cfg.name] = msg;
         count += 1;
+      } else if (formData[cfg.name] === void 0 && cfg.default) {
+        formData[cfg.name] = cfg.default;
       }
     });
     this.setState({ helpMsg });
     if (count <= 0) {
-      return this.props.encodeData(formValues);
+      const result = this.props.encodeData(formData);
+      return result;
     }
     return void 0;
   }
@@ -132,14 +184,15 @@ export default class CustomForm<T> extends Component<Props<T>, State> {
         <RichText html={config.default as string} />
       );
     }
-    if (config['ui:type'].startsWith('custom::')) {
-      const ComponentName = config['ui:type'].replace('custom::', '');
+    if (config['ui:type']?.startsWith('custom::') || this.props.replacedComponents?.includes(config['ui:type'])) {
+      const ComponentName = config['ui:type']?.replace('custom::', '');
       const CustomComponent = this.props.extraComponents?.[ComponentName] || config['ui:externalComponent'];
+      if (!CustomComponent) { return <Alert message="未知表单组件" type="error" showIcon />; }
       return (
         <CustomComponent
-          theme={this.props.theme}
+          icons={this.props.icons}
           schema={config}
-          value={formValues[config.name] as Record<string, string> | Record<string, string>[]}
+          value={formValues[config.name]}
           onChange={(value) => {
             formValues[config.name] = value;
             this.setState({ formValues }, () => {
@@ -154,20 +207,21 @@ export default class CustomForm<T> extends Component<Props<T>, State> {
         />
       );
     }
-    const BuiltInComponent = BuiltInComponents[config['ui:type']];
+    const BuiltInComponent = BuiltInComponents[config['ui:type']] as React.JSXElementConstructor<DTGComponentBaseProperty<unknown>>;
     if (BuiltInComponent) {
       return (
         <BuiltInComponent
-          theme={this.props.theme}
+          icons={this.props.icons}
           schema={config}
-          value={formValues[config.name] as Record<string, string> | Record<string, string>[]}
+          value={formValues[config.name]}
+          extraComponents={this.props.extraComponents}
           onChange={(value) => {
             formValues[config.name] = value;
             this.setState({ formValues }, () => {
               this.changeData();
             });
           }}
-          onValidate={(msg: string) => {
+          onValidate={(msg) => {
             helpMsg[config.name] = msg || '';
             this.setState({ helpMsg });
           }}
@@ -175,7 +229,7 @@ export default class CustomForm<T> extends Component<Props<T>, State> {
         />
       );
     }
-    return null;
+    return <Alert message="未知表单组件" type="error" showIcon />;
   }
 
   public renderTitleLabel(config: DTGComponentPropertySchema) {
@@ -218,10 +272,12 @@ export default class CustomForm<T> extends Component<Props<T>, State> {
         <Form.Item
           key={key}
           label={this.renderTitleLabel(config)}
+          labelAlign={this.props.labelAlign || 'left'}
           colon={false}
           validateStatus={helpMsg[key] ? 'error' : 'success'}
           help={config['ui:layout']?.customHelpMsg ? '' : helpMsg[key]}
           required={config.required}
+          className="jfe-drip-table-generator-custom-form-item"
           style={config['ui:wrapperStyle']}
           {...formItemLayout}
         >
@@ -252,26 +308,58 @@ export default class CustomForm<T> extends Component<Props<T>, State> {
       if (this.props.groupType === 'collapse') {
         return (
           <Collapse>
-            { groups.map((groupName, groupIndex) => (
-              <Collapse.Panel key={groupIndex} header={groupName}>
-                { configs.filter(item => groupName === (item.group || '其他')).map((item, index) => this.renderFormItem(item, index)) }
-              </Collapse.Panel>
-            )) }
+            { groups.map((groupName, groupIndex) => {
+              const subGroups = [...new Set(configs.filter(item => groupName === (item.group || '其他')).map(item => item.subGroup || ''))].filter(group => !!group);
+              return (
+                <Collapse.Panel key={groupIndex} header={groupName}>
+                  { configs.filter(item => groupName === (item.group || '其他') && !item.subGroup).map((item, index) => this.renderFormItem(item, index)) }
+                  { subGroups.length > 0 && (
+                  <Collapse style={{ width: 'calc(100% + 24px)', marginLeft: '-12px' }}>
+                    { subGroups.map((subGroupName, subGroupIndex) => (
+                      <Collapse.Panel key={subGroupIndex} header={subGroupName}>
+                        { configs.filter(item => groupName === (item.group || '其他') && item.subGroup === subGroupName).map((item, index) => this.renderFormItem(item, index)) }
+                      </Collapse.Panel>
+                    )) }
+                  </Collapse>
+                  ) }
+                </Collapse.Panel>
+              );
+            }) }
           </Collapse>
         );
       }
       return (
-        <Tabs tabPosition="left">
-          { groups.map((groupName, groupIndex) => (
-            <Tabs.TabPane key={groupIndex} tab={groupName}>
-              { configs.filter(item => groupName === (item.group || '其他')).map((item, index) => this.renderFormItem(item, index)) }
-            </Tabs.TabPane>
-          )) }
-        </Tabs>
+        <Tabs
+          tabPosition={this.props.tabPosition}
+          type="card"
+          centered
+          {...this.props.tabProps}
+          items={groups.map((groupName, groupIndex) => {
+            const subGroups = [...new Set(configs.filter(item => groupName === (item.group || '其他')).map(item => item.subGroup || ''))].filter(group => !!group);
+            return {
+              label: groupName,
+              key: String(groupIndex),
+              children: (
+                <div className={this.props.wrapperClassName}>
+                  { configs.filter(item => groupName === (item.group || '其他') && !item.subGroup).map((item, index) => this.renderFormItem(item, index)) }
+                  { subGroups.length > 0 && (
+                  <Collapse style={{ width: 'calc(100% + 24px)', marginLeft: '-12px' }}>
+                    { subGroups.map((subGroupName, subGroupIndex) => (
+                      <Collapse.Panel key={subGroupIndex} header={subGroupName}>
+                        { configs.filter(item => groupName === (item.group || '其他') && item.subGroup === subGroupName).map((item, index) => this.renderFormItem(item, index)) }
+                      </Collapse.Panel>
+                    )) }
+                  </Collapse>
+                  ) }
+                </div>
+              ),
+            };
+          })}
+        />
       );
     }
     return (
-      <div>
+      <div className={this.props.wrapperClassName}>
         { configs.map((item, index) => this.renderFormItem(item, index)) }
       </div>
     );

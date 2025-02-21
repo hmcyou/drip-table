@@ -1,30 +1,27 @@
 /**
- * This file is part of the jd-mkt5 launch.
- * @link     : https://ace.jd.com/
+ * This file is part of the drip-table project.
+ * @link     : https://drip-table.jd.com/
  * @author   : qianjing29 (qianjing29@jd.com)
  * @modifier : qianjing29 (qianjing29@jd.com)
  * @copyright: Copyright (c) 2020 JD Network Technology Co., Ltd.
  */
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Popover, Select } from 'antd';
-import { DripTableDriver } from 'drip-table';
 import React from 'react';
 
-import { DTGComponentPropertySchema } from '@/typing';
+import { DataSchema } from '@/typing';
+
+import { DTGComponentBaseProperty } from '..';
 
 type SelectProps = React.ComponentProps<typeof Select>;
 type SelectValueType = SelectProps['value'];
 type SelectOptionType = NonNullable<SelectProps['options']>[number];
 
-interface Props {
-  theme?: DripTableDriver;
-  schema: DTGComponentPropertySchema;
-  value?: SelectValueType;
-  onChange?: (value: SelectValueType) => void;
-  onValidate?: (errorMessage: string) => void;
-}
+interface Props extends DTGComponentBaseProperty<SelectValueType> {}
 
 export default class SelectComponent extends React.PureComponent<Props> {
+  public static componentName = 'select';
+
   private get options() {
     const uiProps = this.props.schema['ui:props'] || {};
     if (Array.isArray(uiProps.options)) {
@@ -42,9 +39,9 @@ export default class SelectComponent extends React.PureComponent<Props> {
   }
 
   private iconRender(iconName: string) {
-    const icons = this.props.theme?.icons || {};
+    const icons = this.props.icons || {};
     const Icon = icons[iconName];
-    return Icon ? <Icon style={{ lineHeight: '22px' }} /> : null;
+    return Icon ? <Icon /> : null;
   }
 
   private renderOptionItem(option: NonNullable<SelectOptionType>[number]) {
@@ -53,9 +50,9 @@ export default class SelectComponent extends React.PureComponent<Props> {
         ...option,
         value: option.value,
         label: (
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
             { option.icon && this.iconRender(option.icon) }
-            <span>{ option.label }</span>
+            <span style={option.icon ? { marginLeft: '12px' } : void 0}>{ option.label }</span>
             { option.description && (
             <Popover content={option.description}>
               <QuestionCircleOutlined style={{ margin: '0 8px' }} />
@@ -68,6 +65,17 @@ export default class SelectComponent extends React.PureComponent<Props> {
     return { ...option };
   }
 
+  public transform(value: SelectValueType) {
+    const config = this.props.schema;
+    if (config.type === 'array'
+      && typeof config.items === 'object'
+      && (config.items as DataSchema).type === 'number'
+    ) {
+      return (value as string[]).map(Number);
+    }
+    return value;
+  }
+
   public render() {
     const config = this.props.schema;
     const uiProps = this.props.schema['ui:props'] || {};
@@ -76,14 +84,26 @@ export default class SelectComponent extends React.PureComponent<Props> {
       <Select
         {...uiProps}
         showSearch
+        virtual={(this.options || []).length > 99}
         allowClear={uiProps.allowClear as boolean}
-        style={{ width: 420, ...uiProps.style }}
+        style={{ width: 120, ...uiProps.style }}
         mode={uiProps.mode as 'multiple' | 'tags'}
         defaultValue={config.default as SelectValueType}
         value={this.formattedValue}
         options={(this.options as SelectOptionType[] || [])}
+        getPopupContainer={triggerNode => triggerNode}
         onChange={(value) => {
-          this.props.onChange?.(value);
+          const formattedValue = this.transform(value);
+          this.props.onChange?.(formattedValue);
+          if (config.validate) {
+            const res = config.validate(formattedValue);
+            (res instanceof Promise ? res : Promise.resolve(res))
+              .then((message) => {
+                this.props.onValidate?.(message);
+                return message;
+              })
+              .catch((error: unknown) => { throw error; });
+          }
         }}
       />
     );

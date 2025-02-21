@@ -1,0 +1,22 @@
+@import url("@@drip-table-src/styles/theme/default.less");
+
+@prefixCls: jfe-drip-table-cc-link;
+
+.@{prefixCls}-link {
+  color: @drip-table-primary-color;
+}
+
+.@{prefixCls}-link:active,
+.@{prefixCls}-link:hover {
+  color: @drip-table-primary-active-color;
+}
+
+.@{prefixCls}-link-disabled,
+.@{prefixCls}-link-disabled:hover {
+  color: #00000040;
+  cursor: not-allowed;
+}
+
+.@{prefixCls}-link-break {
+  word-break: break-word;
+}

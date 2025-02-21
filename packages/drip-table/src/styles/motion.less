@@ -1,0 +1,34 @@
+/**
+ * This file is part of the drip-table project.
+ * @link     : https://drip-table.jd.com/
+ * @author   : Emil Zhai (root@derzh.com)
+ * @modifier : Emil Zhai (root@derzh.com)
+ * @copyright: Copyright (c) 2021 JD Network Technology Co., Ltd.
+ */
+
+@import url("mixins/motion");
+@import url("motion/fade");
+@import url("motion/move");
+@import url("motion/other");
+@import url("motion/slide");
+@import url("motion/zoom");
+
+@prefixCls: jfe-drip-table-motion;
+
+// For common/openAnimation
+.@{prefixCls}-collapse-legacy {
+  overflow: hidden;
+
+  &-active {
+    transition:
+      height @animation-duration-base @ease-in-out,
+      opacity @animation-duration-base @ease-in-out !important;
+  }
+}
+
+.@{prefixCls}-collapse {
+  overflow: hidden;
+  transition:
+    height @animation-duration-base @ease-in-out,
+    opacity @animation-duration-base @ease-in-out !important;
+}

@@ -1,0 +1,83 @@
+/**
+ * This file is part of the drip-table project.
+ * @link     : https://drip-table.jd.com/
+ * @author   : helloqian12138 (johnhello12138@163.com)
+ * @modifier : helloqian12138 (johnhello12138@163.com)
+ * @copyright: Copyright (c) 2020 JD Network Technology Co., Ltd.
+ */
+
+@import url("./index.less");
+
+@prefixCls: jfe-drip-table-generator;
+@prefixClsAnt: ant;
+
+.@{prefixCls}-container {
+  .@{prefixClsAnt}-btn:hover,
+  .@{prefixClsAnt}-btn:focus {
+    color: var(--drip-table-primary-color, @primary-color);
+    border-color: var(--drip-table-border-color, @border-color);
+  }
+
+  .@{prefixClsAnt}-btn-primary {
+    border-color: var(--drip-table-border-color, @border-color);
+    background-color: var(--drip-table-primary-color, @primary-color);
+  }
+
+  .@{prefixClsAnt}-btn-primary:hover,
+  .@{prefixClsAnt}-btn-primary:focus {
+    color: #ffffff;
+    border-color: var(--drip-table-border-color, @border-color);
+    background-color: var(--drip-table-button-hover-color, @button-hover-color);
+  }
+
+  .@{prefixClsAnt}-radio-button-wrapper:hover,
+  .@{prefixClsAnt}-select-item-option-selected:not(.@{prefixClsAnt}-select-item-option-disabled) .@{prefixClsAnt}-select-item-option-state,
+  .@{prefixClsAnt}-message-info .@{prefixClsAnt}icon,
+  .@{prefixClsAnt}-message-loading .@{prefixClsAnt}icon {
+    color: var(--drip-table-primary-color, @primary-color);
+  }
+
+  .@{prefixClsAnt}-switch-checked,
+  .@{prefixClsAnt}-radio-inner::after,
+  .@{prefixClsAnt}-radio-group-solid .@{prefixClsAnt}-radio-button-wrapper-checked:not(.@{prefixClsAnt}-radio-button-wrapper-disabled) {
+    background: var(--drip-table-primary-color, @primary-color);
+  }
+
+  .@{prefixClsAnt}-radio-checked::after {
+    border-color: var(--drip-table-primary-color, @primary-color);
+  }
+
+  .@{prefixClsAnt}-checkbox-checked .@{prefixClsAnt}-checkbox-inner {
+    background-color: var(--drip-table-primary-color, @primary-color);
+    border-color: var(--drip-table-primary-color, @primary-color);
+  }
+
+  .@{prefixClsAnt}-input:hover,
+  .@{prefixClsAnt}-input:focus,
+  .@{prefixClsAnt}-input-focused,
+  .@{prefixClsAnt}-input-number:hover,
+  .@{prefixClsAnt}-input-number:focus,
+  .@{prefixClsAnt}-input-number-focused,
+  .@{prefixClsAnt}-radio-group-solid .@{prefixClsAnt}-radio-button-wrapper-checked:not(.@{prefixClsAnt}-radio-button-wrapper-disabled),
+  .@{prefixClsAnt}-select:not(.@{prefixClsAnt}-select-disabled):hover .@{prefixClsAnt}-select-selector,
+  .@{prefixClsAnt}-select-focused:not(.@{prefixClsAnt}-select-disabled).@{prefixClsAnt}-select:not(.@{prefixClsAnt}-select-customize-input) .@{prefixClsAnt}-select-selector,
+  .@{prefixClsAnt}-checkbox-wrapper:hover .@{prefixClsAnt}-checkbox-inner,
+  .@{prefixClsAnt}-checkbox:hover .@{prefixClsAnt}-checkbox-inner,
+  .@{prefixClsAnt}-checkbox-input:focus + .@{prefixClsAnt}-checkbox-inner,
+  .@{prefixClsAnt}-radio-checked .@{prefixClsAnt}-radio-inner,
+  .@{prefixClsAnt}-pagination-item:focus-visible,
+  .@{prefixClsAnt}-pagination-item:hover {
+    border-color: var(--drip-table-border-color, @border-color);
+  }
+
+  .@{prefixClsAnt}-input:focus, .@{prefixClsAnt}-input-focused,
+  .@{prefixClsAnt}-input-number:focus,
+  .@{prefixClsAnt}-input-number-focused,
+  .@{prefixClsAnt}-select-focused:not(.@{prefixClsAnt}-select-disabled).@{prefixClsAnt}-select:not(.@{prefixClsAnt}-select-customize-input) .@{prefixClsAnt}-select-selector {
+    box-shadow: 0 0 0 2px var(--drip-table-shadow-color, @shadow-color);
+  }
+
+  .@{prefixClsAnt}-select-item-option-selected:not(.@{prefixClsAnt}-select-item-option-disabled) {
+    background: var(--drip-table-background-color, @background-color);
+  }
+}

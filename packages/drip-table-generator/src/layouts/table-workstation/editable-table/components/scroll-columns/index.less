@@ -1,0 +1,67 @@
+/**
+ * This file is part of the drip-table project.
+ * @link     : https://drip-table.jd.com/
+ * @author   : helloqian12138 (johnhello12138@163.com)
+ * @modifier : helloqian12138 (johnhello12138@163.com)
+ * @copyright: Copyright (c) 2020 JD Network Technology Co., Ltd.
+ */
+
+@import url("../../../../../styles/index.less");
+
+@prefixCls: jfe-drip-table-generator-workstation-table;
+
+.@{prefixCls}-scrollable-columns {
+  width: max-content;
+  height: max-content;
+  z-index: 2;
+
+  & > .@{prefixCls}-row {
+    display: flex;
+    width: 100%;
+
+    &.stripe {
+      background-color: #efefef;
+    }
+  }
+
+  & > .@{prefixCls}-header {
+    background: #dddddd;
+    font-weight: bold;
+
+    &.sticky {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    &.invisible {
+      .@{prefixCls}-header-item {
+        opacity: .7;
+        background:
+          linear-gradient(
+            45deg,
+            var(--drip-table-background-color, @background-color) 0,
+            var(--drip-table-background-color, @background-color) 10%,
+            transparent 10%,
+            transparent 20%,
+            var(--drip-table-background-color, @background-color) 20%,
+            var(--drip-table-background-color, @background-color) 30%,
+            transparent 30%,
+            transparent 40%,
+            var(--drip-table-background-color, @background-color) 40%,
+            var(--drip-table-background-color, @background-color) 50%,
+            transparent 50%,
+            transparent 60%,
+            var(--drip-table-background-color, @background-color) 60%,
+            var(--drip-table-background-color, @background-color) 70%,
+            transparent 70%,
+            transparent 80%,
+            var(--drip-table-background-color, @background-color) 80%,
+            var(--drip-table-background-color, @background-color) 90%,
+            transparent 90%,
+            transparent 100%
+          );
+      }
+    }
+  }
+}

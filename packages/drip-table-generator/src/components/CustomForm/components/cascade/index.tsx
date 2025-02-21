@@ -1,6 +1,6 @@
 /**
- * This file is part of the jd-mkt5 launch.
- * @link     : https://ace.jd.com/
+ * This file is part of the drip-table project.
+ * @link     : https://drip-table.jd.com/
  * @author   : qianjing29 (qianjing29@jd.com)
  * @modifier : qianjing29 (qianjing29@jd.com)
  * @copyright: Copyright (c) 2020 JD Network Technology Co., Ltd.
@@ -8,18 +8,15 @@
 import { Cascader as Cascade } from 'antd';
 import React from 'react';
 
-import { DTGComponentPropertySchema } from '@/typing';
+import { DTGComponentBaseProperty } from '..';
 
 type CascadeProps = React.ComponentProps<typeof Cascade>;
 
-interface Props {
-  schema: DTGComponentPropertySchema;
-  value?: CascadeProps['value'];
-  onChange?: (value: CascadeProps['value']) => void;
-  onValidate?: (errorMessage: string) => void;
-}
+interface Props extends DTGComponentBaseProperty<CascadeProps['value']> {}
 
 export default class CascadeComponent extends React.PureComponent<Props> {
+  public static componentName = 'cascade';
+
   public render() {
     const config = this.props.schema;
     const uiProps = this.props.schema['ui:props'] || {};
@@ -32,7 +29,7 @@ export default class CascadeComponent extends React.PureComponent<Props> {
         value={this.props.value}
         displayRender={uiProps.displayRender as CascadeProps['displayRender']}
         disabled={uiProps.disabled as boolean}
-        style={{ width: 420, ...uiProps.style }}
+        style={{ width: 120, ...uiProps.style }}
         onChange={(value) => {
           this.props.onChange?.(value);
           if (config.validate) {
@@ -42,7 +39,7 @@ export default class CascadeComponent extends React.PureComponent<Props> {
                 this.props.onValidate?.(msg);
                 return msg;
               })
-              .catch((error) => { throw error; });
+              .catch((error: unknown) => { throw error; });
           }
         }}
       />

@@ -1,9 +1,9 @@
 ---
-order: 2
 title: 常见问题
+toc: content
 ---
 
-# 常见问题
+## 常见问题
 
 ### 1、是否支持自定义组件面板？
 
@@ -12,7 +12,7 @@ title: 常见问题
 
 ### 2、使用时样式错乱该如何解决？
 
-首先排查一下是否未安装 `antd`、`drip-table` 和 `drip-table-driver-antd`，然后，查看一下组件是否引入了对应的样式文件。
+首先排查一下是否未安装 `antd`、`drip-table`，然后，查看一下组件是否引入了对应的样式文件。
 
 ### 3、安装后运行项目报错： `ReferenceError: Buffer is not defined`，如何解决？
 

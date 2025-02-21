@@ -1,0 +1,73 @@
+/**
+ * This file is part of the drip-table project.
+ * @link     : https://drip-table.jd.com/
+ * @author   : helloqian12138 (johnhello12138@163.com)
+ * @modifier : helloqian12138 (johnhello12138@163.com)
+ * @copyright: Copyright (c) 2020 JD Network Technology Co., Ltd.
+ */
+
+@import url("../../../../styles/index.less");
+
+@prefixCls: jfe-drip-table-generator-table-container;
+
+.@{prefixCls}-wrapper {
+  border: 1px solid transparent;
+  padding: 0 12px;
+  width: max-content;
+  position: relative;
+  min-width: 500px;
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+  overflow: visible;
+  background-color: #ffffff;
+
+  &:hover {
+    border: 1px dashed var(--drip-table-border-color, @border-color);
+  }
+
+  &.bordered {
+    border: 1px dashed #efefef;
+  }
+
+  &.disabled {
+    border: 1px solid transparent;
+  }
+
+  &.checked {
+    border: 1px solid var(--drip-table-border-color, @border-color);
+  }
+}
+
+.@{prefixCls}-tools {
+  position: absolute;
+  top: -27px;
+  left: -1px;
+  display: flex;
+  z-index: 1;
+}
+
+.@{prefixCls}-tool {
+  padding: 2px 4px;
+  background-color: var(--drip-table-primary-color, @primary-color);
+  color: #ffffff;
+  box-shadow: 0 -1px 4px -1px rgb(0 0 0 / 56%);
+}
+
+.@{prefixCls}-inner-button {
+  border-color: transparent;
+  border-width: 0;
+
+  &:focus,
+  &:hover {
+    color: #e2e2e2 !important;
+  }
+}
+
+.@{prefixCls}-setting {
+  padding: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%), 0 9px 28px 8px rgb(0 0 0 / 5%);
+  position: absolute;
+  border-radius: 2px;
+}

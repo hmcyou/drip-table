@@ -5,7 +5,7 @@
   </h1>
 </a>
 
-[English](./README.md) | 简体中文 | [官方文档](http://drip-table.jd.com/) | [讨论组](https://github.com/JDFED/drip-table/discussions)｜[Gitter 群聊](https://gitter.im/drip-table/community)
+[English](./README.md) | 简体中文 | [官方文档](http://drip-table.jd.com/) | [讨论组](https://github.com/JDFED/drip-table/discussions)｜[Gitter 群聊](https://gitter.im/drip-table/community) | [官方交流微信群](./Contact.md)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
@@ -25,7 +25,7 @@
 
 `DripTable` 是京东零售推出的一款用于企业级中后台的动态列表解决方案，项目基于 `React` 和 `JSON Schema`，旨在通过`简单配置`快速生成页面动态列表来降低列表开发难度、提高工作效率。
 
-`DripTable` 目前包含以下子项目：`drip-table`、`drip-table-generator`、`drip-table-driver-antd`。
+`DripTable` 目前包含以下子项目：`drip-table`、`drip-table-generator`。
 
 各个子项目具体介绍如下：
 
@@ -33,7 +33,44 @@
 
 - `drip-table-generator`：一个可视化的用于 `DripTable` 配置 `JSON Schema` 标准的配置数据的生成工具。
 
-- `drip-table-driver-antd`： 一个 `Ant Design` UI 组件库主题包。
+## 功能点
+
+* [x] 基础表格
+* [x] 复合表格
+* [x] 工具栏
+* [x] 渲染器
+* [x] 文本组件
+* [x] 数字组件
+* [x] 图片组件
+* [x] 链接组件
+* [x] 标签组件
+* [x] 按钮组件
+* [x] 下拉框组件
+* [x] 日期组件
+* [x] 弹出网页组件
+* [x] 富文本组件
+* [x] 组合组件
+* [x] 自定义组件
+* [x] 头部插槽
+* [x] 尾部插槽
+* [x] 分页
+* [x] 虚拟列表
+* [x] 冻结表头
+* [x] 子表格
+* [x] 行选择
+* [x] 行拖拽
+* [x] 固定列
+* [x] 显示/隐藏列
+* [x] 数据编辑
+* [x] 斑马线条纹
+* [x] 多种边框
+* [x] 自适应宽高
+* [x] 表格大小
+* [x] 全局样式
+* [x] 空表提示
+* [x] 加载中
+* [x] 卡片布局
+* [x] 过滤器
 
 ## ⬆️ 开始使用
 
@@ -43,7 +80,7 @@
 
 1. 安装依赖
 
-   配置端依赖应用端，安装前先确保已安装 `drip-table` 和 `drip-table-driver-{drivername}`。
+   配置端依赖应用端，安装前先确保已安装 `drip-table`。
 
    > yarn
 
@@ -59,76 +96,67 @@
 
 2. 在文件开头引入依赖
 
-   ```js
+   ```js | pure
    import DripTableGenerator from "drip-table-generator";
-   import "drip-table-generator/dist/index.css";
+   import "drip-table-generator/dist/index.min.css";
    ```
 
 3. 在页面中引用
 
-   ```js
+   ```js | pure
    return <DripTableGenerator />;
    ```
 
    配置端正常渲染效果如下：
 
-   ![drip-table-generator](https://img10.360buyimg.com/imagetools/jfs/t1/209919/9/12490/4540144/61b71921Ee35a9a3c/e2f7167fef822f17.gif)
+   ![drip-table-generator](https://img10.360buyimg.com/imagetools/jfs/t1/83544/7/17486/359800/63620e25Ed7185bc1/caf5173d381cb4c0.png)
 
 ### 应用端
 
 1. 安装依赖
 
-   同时安装 `drip-table` 和 `drip-table` 主题包：
+   安装 `drip-table`：
 
    > yarn
 
    ```sh
-   yarn add drip-table drip-table-driver-{drivername}
+   yarn add drip-table
    ```
 
    > npm
 
    ```sh
-   npm install --save drip-table drip-table-driver-{drivername}
+   npm install --save drip-table
    ```
-
-   目前可选列表如下：
-
-   - drip-table-driver-antd
 
 2. 在文件开头引入依赖
 
    ```js
    // 引入 drip-table
    import DripTable from "drip-table";
-   // 引入主题包，以 antd 为例
-   import DripTableDriverAntDesign from "drip-table-driver-antd";
-   // 引入 ant-design 样式
-   import "antd/dist/antd.css";
    // 引入 drip-table 样式
-   import "drip-table/dist/index.css";
+   import "drip-table/dist/index.min.css";
    ```
 
 3. 引用
 
    ```js
    const schema = {
-    $schema: "http://json-schema.org/draft/2019-09/schema#",
-    size: "middle",
-    columns: [
-      {
-        key: "columnKey",
-        title: "列标题",
-        "ui:type": "text",
-        "ui:props": { mode: "single" },
-        type: "string",
-        dataIndex: "dataIndexName",
-      },
-    ],
+     size: "middle",
+     columns: [
+       {
+         key: "columnKey",
+         title: "列标题",
+         dataIndex: "dataIndexName",
+         component: "text",
+         options: {
+           mode: "single",
+         },
+       },
+     ],
    };
    return (
      <DripTable
-       driver={DripTableDriverAntDesign}
        schema={schema}
        dataSource={[]}
      />
@@ -137,7 +165,7 @@
 
    应用端正常渲染效果如下：
 
-   ![drip-table-demo](https://img13.360buyimg.com/imagetools/jfs/t1/217000/18/7528/191045/61b6d9ebE1c96d83b/a63b8edce7757bd8.png)
+   ![drip-table-demo](https://img13.360buyimg.com/imagetools/jfs/t1/136130/29/29966/659037/6363944fEd6a71fa1/2bec620460de4f3c.png)
 
 ## 🤝 开发手册
 
@@ -179,10 +207,15 @@
 
 - 访问 <http://localhost:8000>
 - `drip-table` 示例路由：/drip-table/guide/basic-demo
-- `drip-table-generator` 示例路由：/drip-table-generator/preview
+- `drip-table-generator` 示例路由：/drip-table-generator/demo
 
 更多命令请查看 [DEVELOP](./DEVELOP.zh-CN.md) 。
 官网地址请访问 [drip-table](http://drip-table.jd.com/) 。
+
+## 开发交流
+
+[官方交流微信群](./Contact.md)
+![Drip table 开发交流群1](https://storage.360buyimg.com/icepublic/drip-table/driptable_contact_me_qr.png)
 
 ## License
 

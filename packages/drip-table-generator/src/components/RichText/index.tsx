@@ -1,6 +1,6 @@
 /*
  * This file is part of the drip-table project.
- * @link     : https://ace.jd.com/
+ * @link     : https://drip-table.jd.com/
  * @author   : Emil Zhai (root@derzh.com)
  * @modifier : Emil Zhai (root@derzh.com)
  * @copyright: Copyright (c) 2020 JD Network Technology Co., Ltd.
@@ -13,6 +13,7 @@ import * as DOMHandler from 'domhandler';
 import React from 'react';
 import ViewerJS from 'viewerjs';
 
+import { evaluate } from '@/utils/sandbox';
 import Highlight, { HighlightProps } from '@/components/Highlight';
 
 type UppercaseLetter = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z';
@@ -44,10 +45,8 @@ const SAFE_TAG_NAME: HTMLTagName[] = [
   'bdo',
   'big',
   'blockquote',
-  // 'body',
   'br',
   'button',
-  // 'canvas',
   'caption',
   'cite',
   'code',
@@ -69,7 +68,6 @@ const SAFE_TAG_NAME: HTMLTagName[] = [
   'figcaption',
   'figure',
   'footer',
-  // 'form',
   'h1',
   'h2',
   'h3',
@@ -82,16 +80,13 @@ const SAFE_TAG_NAME: HTMLTagName[] = [
   'hr',
   'html',
   'i',
-  // 'iframe',
   'img',
-  // 'input',
   'ins',
   'kbd',
   'keygen',
   'label',
   'legend',
   'li',
-  // 'link',
   'main',
   'map',
   'mark',
@@ -100,7 +95,6 @@ const SAFE_TAG_NAME: HTMLTagName[] = [
   'meta',
   'meter',
   'nav',
-  // 'noscript',
   'object',
   'ol',
   'optgroup',
@@ -118,7 +112,6 @@ const SAFE_TAG_NAME: HTMLTagName[] = [
   's',
   'samp',
   'slot',
-  // 'script',
   'section',
   'select',
   'small',
@@ -388,19 +381,19 @@ export default class RichText extends React.PureComponent<RichTextProps> {
         style.display = 'inline';
       }
       const props: Record<string, unknown> = {
-        // normal props
+        // normal props 通用属性
         ...Object.fromEntries(
           Object.entries(attribs)
             .filter(([k, v]) => !HIDDEN_TAG_PROP_NAME.has(k) && !(k.toLowerCase() in domEvents)),
         ),
-        // event props
+        // event props 事件属性
         ...Object.fromEntries(
           Object.entries(attribs)
             .map(([k, v]) => [domEvents[k.toLowerCase()], v])
             .filter(([k, v]) => k)
-            .map(([k, v]) => [k, new Function(v)]),
+            .map(([k, v]) => [k, evaluate(v)]),
         ),
-        // static props
+        // static props 静态属性
         key,
         style,
         className: attribs.class,
@@ -434,7 +427,7 @@ export default class RichText extends React.PureComponent<RichTextProps> {
       return prevVal;
     }
     return prevVal;
-  }
+  };
 
   /**
    * 处理页面，绑定图片查看器
@@ -453,7 +446,7 @@ export default class RichText extends React.PureComponent<RichTextProps> {
       this.viewer.destroy();
     }
     this.viewer = new ViewerJS(el);
-  }
+  };
 
   public componentDidUpdate() {
     if (this.viewer) {

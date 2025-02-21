@@ -8,27 +8,121 @@
 
 import React from 'react';
 
-import { DripTableContext, DripTableStoreContext } from './context';
+import type { SetStateAction } from '@/utils/hooks';
+import type { DripTableExtraOptions, DripTableProps, DripTableRecordTypeBase, DripTableRecordTypeWithSubtable, DripTableTableInformation, ExtractDripTableExtraOption } from '@/types';
 
-// 使用最顶层组件的 setState
-export const useTable = () => React.useContext(DripTableContext);
+import { FinalizeString } from './components/cell-components/utils';
+import type { SandboxCreateEvaluator, SandboxEvaluate, SandboxSafeEvaluate } from './utils/sandbox';
 
-// 组件最顶层传入的所有props
-export const useStore = () => React.useContext(DripTableStoreContext);
+export interface IDripTableContext<
+  RecordType extends DripTableRecordTypeWithSubtable<DripTableRecordTypeBase, ExtractDripTableExtraOption<ExtraOptions, 'SubtableDataSourceKey'>> = DripTableRecordTypeWithSubtable<DripTableRecordTypeBase, never>,
+  ExtraOptions extends Partial<DripTableExtraOptions> = never,
+> {
+  /**
+   * 表格属性
+   */
+  props: DripTableProps<RecordType, ExtraOptions>;
+  /**
+   * 表格基本信息
+   */
+  info: DripTableTableInformation<RecordType, ExtraOptions>;
+  /**
+   * 表格状态
+   */
+  state: {
+    loading: boolean;
+    api: CallableFunction | CallableFunction[] | null;
+    tab: number; // 如果api是数组，需要在最顶层感知tab，来知道到底点击搜索调用的是啥api
+    extraData: null; // 需要用到的 dataSource 以外的扩展返回值
+    pendingChanging: boolean;
+    pagination: {
+      current: number;
+      total: number;
+      pageSize: number;
+    };
+    paginationChanged: boolean;
+    sorter: {
+      key: string | null;
+      direction: 'ascend' | 'descend' | null;
+      comparer: ((a: RecordType, b: RecordType) => number) | null;
+    };
+    sorterChanged: boolean;
+    filters: Record<string, (boolean | React.Key)[] | null>;
+    filtersChanged: boolean;
+    tableSize: 'default';
+    layout: 'table' | 'card' | 'calendar';
+    checkPassed: boolean;
+    selectedRowKeys: React.Key[];
+    displayColumnKeys: React.Key[];
+  };
+  /**
+   * 设置表格状态
+   */
+  setState: (state: SetStateAction<IDripTableContext['state']>) => void;
+  /**
+   * 创建沙箱函数
+   */
+  createEvaluator: SandboxCreateEvaluator;
+  /**
+   * 沙箱函数执行器
+   */
+  evaluate: SandboxEvaluate;
+  /**
+   * 安全的沙箱函数执行器
+   */
+  safeEvaluate: SandboxSafeEvaluate;
+  /**
+   * 格式化模板字符串
+   */
+  finalizeString: FinalizeString;
+}
 
-export type SetStateAction<S> = Partial<S> | ((prevState: S) => Partial<S>);
-
-/**
- * 使用状态对象，设置属性时可传入部分
- * @param initState 初始状态
- * @returns [状态对象, 状态转移函数]
- */
-export const useState = <T>(initState: T): [T, (action: SetStateAction<T>) => void] => React.useReducer(
-  (state: T, action: SetStateAction<T>): T => {
-    const data = typeof action === 'function'
-      ? action(state)
-      : action;
-    return { ...state, ...data };
+export const createTableState = (): IDripTableContext['state'] => ({
+  loading: false,
+  api: null,
+  tab: 0,
+  extraData: null,
+  pendingChanging: false,
+  pagination: {
+    current: 1,
+    total: 0,
+    pageSize: 10,
   },
-  initState,
-);
+  paginationChanged: false,
+  sorter: {
+    key: null,
+    direction: null,
+    comparer: null,
+  },
+  sorterChanged: false,
+  filters: {},
+  filtersChanged: false,
+  tableSize: 'default',
+  checkPassed: true,
+  selectedRowKeys: [],
+  displayColumnKeys: [],
+  layout: 'table',
+});
+
+export const DripTableContext = React.createContext<IDripTableContext>({
+  props: {
+    schema: { columns: [] },
+    dataSource: [],
+  },
+  info: {
+    uuid: '',
+    schema: { columns: [] },
+    dataSource: [],
+  },
+  state: createTableState(),
+  setState: () => void 0,
+  createEvaluator: () => void 0,
+  evaluate: <T = unknown>() => void 0 as T,
+  safeEvaluate: () => void 0,
+  finalizeString: () => '',
+});
+
+export const useTableContext = <
+  RecordType extends DripTableRecordTypeWithSubtable<DripTableRecordTypeBase, ExtractDripTableExtraOption<ExtraOptions, 'SubtableDataSourceKey'>> = DripTableRecordTypeWithSubtable<DripTableRecordTypeBase, never>,
+  ExtraOptions extends Partial<DripTableExtraOptions> = never,
+>() => React.useContext(DripTableContext) as unknown as IDripTableContext<RecordType, ExtraOptions>;

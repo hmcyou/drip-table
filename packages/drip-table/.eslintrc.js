@@ -1,98 +1,174 @@
 const path = require('path');
 
-const rules = {
-  "no-new-func": "off",
-  "no-undefined": "error",
-  "no-void": "off",
-  "react/jsx-no-bind": "off",
-  "react/prop-types": "off",
-  "react/sort-comp": "off",
-  "unicorn/no-array-callback-reference": "off",
-  "unicorn/no-array-for-each": "off",
-  "unicorn/no-array-reduce": "off",
-  "unicorn/prefer-switch": "off",
+const importResolverExtensions = [
+  '.js',
+  '.jsx',
+  '.jx',
+  '.ts',
+  '.tsx',
+  '.tx',
+];
+
+const javascriptRules = {
+  'no-restricted-exports': 'off',
+  'etc/no-internal': [
+    'error',
+    {
+      ignored: {
+        __PARENT_INFO__: 'name',
+      },
+    },
+  ],
+  'react/jsx-no-bind': 'off',
+  'react/prop-types': 'off',
+  'react/sort-comp': 'off',
+  'react/static-property-placement': 'off',
+  'unicorn/no-array-callback-reference': 'off',
+  'unicorn/no-array-for-each': 'off',
+  'unicorn/no-array-reduce': 'off',
+  'unicorn/prefer-switch': 'off',
 };
-const extensions = [".js", ".jsx", ".jx", ".ts", ".tsx", ".tx"];
+
+const typescriptRules = {
+  ...javascriptRules,
+};
+
+const buildingToolsJavascriptRules = {
+  camelcase: 'off',
+  'global-require': 'off',
+  'id-match': 'off',
+  'multiline-comment-style': 'off',
+  'no-console': 'off',
+  'no-sync': 'off',
+  'no-underscore-dangle': 'off',
+  'node/global-require': 'off',
+  'node/no-unpublished-require': 'off',
+  'unicorn/prefer-module': 'off',
+};
+
+const buildingToolsTypescriptRules = {
+  ...buildingToolsJavascriptRules,
+  '@typescript-eslint/naming-convention': 'off',
+};
 
 // http://eslint.org/docs/user-guide/configuring
 module.exports = {
   root: true,
-  parser: "babel-eslint",
+  parser: '@babel/eslint-parser',
   parserOptions: {
     ecmaVersion: 6,
     ecmaFeatures: {
       modules: true,
       jsx: true,
       legacyDecorators: true,
-      experimentalObjectRestSpread: true,
     },
-    sourceType: "module",
+    sourceType: 'module',
+    requireConfigFile: false,
   },
   env: {
     browser: true,
     node: true,
     es6: true,
   },
-  extends: [
-    "lvmcn/javascript/react",
-  ],
   plugins: [
-    "react",
-    "import",
-    "unicorn",
-    "unused-imports",
+    'import',
+    'json',
+    'react',
+    'unicorn',
+    'unused-imports',
   ],
   settings: {
-    "import/resolver": {
+    'import/resolver': {
       alias: {
         map: [
           ['@', path.resolve(__dirname, './src')],
         ],
-        extensions: extensions,
+        extensions: importResolverExtensions,
       },
       node: {
-        extensions: extensions,
+        extensions: importResolverExtensions,
       },
     },
-    "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"],
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.tsx', '.tx'],
     },
     react: {
-      version: "detect",
+      version: 'detect',
     },
   },
   noInlineConfig: true,
-  rules,
   overrides: [
+    // ----------------------
+    //  json files
+    // ----------------------
     {
-      files: ["*.ts", "*.tsx", "*.tx"],
-      parser: "@typescript-eslint/parser",
+      files: ['.json', '.*.json'],
+      extends: ['lvmcn/json'],
+    },
+    // ----------------------
+    //  building tools files
+    // ----------------------
+    {
+      files: ['*.js', '.*.js'],
+      excludedFiles: ['src/**'],
+      extends: ['lvmcn/javascript/node'],
+      rules: buildingToolsJavascriptRules,
+    },
+    {
+      files: ['*.ts', '.*.ts', '*.tsx', '.*.tsx'],
+      excludedFiles: ['src/**'],
+      extends: ['lvmcn/typescript/node'],
+      parser: '@typescript-eslint/parser',
       parserOptions: {
         ecmaVersion: 6,
         ecmaFeatures: {
           modules: true,
           jsx: true,
           legacyDecorators: true,
-          experimentalObjectRestSpread: true,
         },
-        sourceType: "module",
-        project: "./tsconfig.json",
+        sourceType: 'module',
+        project: './tsconfig.json',
       },
-      extends: [
-        "lvmcn/typescript/react",
-      ],
-      rules,
+      rules: buildingToolsTypescriptRules,
+    },
+    // ----------------------
+    //  project source files
+    // ----------------------
+    {
+      files: ['src/**/*.js', 'src/**/*.jsx'],
+      extends: ['lvmcn/javascript/react'],
+      rules: javascriptRules,
     },
     {
-      files: ["*.d.ts"],
+      files: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.tx'],
+      extends: ['lvmcn/typescript/react'],
+      parser: '@typescript-eslint/parser',
+      parserOptions: {
+        ecmaVersion: 6,
+        ecmaFeatures: {
+          modules: true,
+          jsx: true,
+          legacyDecorators: true,
+        },
+        sourceType: 'module',
+        project: './tsconfig.json',
+      },
+      rules: typescriptRules,
+    },
+    // d.ts
+    {
+      files: ['src/**/*.d.ts'],
       rules: {
-        "react/no-typos": "off",
-        "@typescript-eslint/no-unused-vars": "off",
+        'react/no-typos': 'off',
+        '@typescript-eslint/no-unused-vars': 'off',
       },
     },
-  ],
-  ignorePatterns: [
-    "/.eslintrc.js",
-    "/dist",
+    // utils sandbox
+    {
+      files: ['src/utils/sandbox.ts'],
+      rules: {
+        'no-new-func': 'off',
+      },
+    },
   ],
 };

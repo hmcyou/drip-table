@@ -41,8 +41,41 @@ export const get = (data: unknown, indexes: string | number | (string | number)[
 export const filterAttributes = <T>(record: T, excludeAttrs: string | string[]) => {
   if (typeof excludeAttrs === 'string') { excludeAttrs = [excludeAttrs]; }
   const finalObject = { ...record };
+  const props = Object.fromEntries(excludeAttrs.map(item => [item, item]));
   excludeAttrs.forEach((key) => {
+    finalObject[key] = void 0;
     delete finalObject[key];
   });
+  return { ...finalObject } as Omit<T, keyof typeof props>;
+};
+
+export const filterAttributesByRegExp = <T extends Record<string, unknown>>(record: T, exp: RegExp) => {
+  const finalObject = {};
+  Object.keys(record).forEach((key) => {
+    if (!exp.test(key)) {
+      finalObject[key] = record[key];
+    }
+  });
   return finalObject;
+};
+
+export const filterArray = <T,>(originArray: T[], filterCallback: (item: T) => boolean | undefined) => {
+  const result: T[] = [];
+  originArray.forEach((item) => {
+    const isMatch = filterCallback(item);
+    if (isMatch) {
+      result.push(item);
+    }
+  });
+  return result;
+};
+
+export const formatNumber = (str: string | number | null | undefined) => {
+  if (str === '' || str === null || str === void 0) {
+    return void 0;
+  }
+  if (!Number.isNaN(Number(str))) {
+    return Number(str);
+  }
+  return str;
 };

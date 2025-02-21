@@ -1,0 +1,99 @@
+---
+title: showToolbar
+toc: content
+---
+
+## showToolbar
+
+- 描述：自定义是否展示工具栏以及工具栏栏目
+- 类型：`boolean | ('template' | 'datasource' | 'import' | 'export' | 'preview')[];`
+- 默认值：`true`
+
+```jsx
+/**
+ * transform: true
+ * defaultShowCode: true
+ * hideActions: ["CSB"]
+ */
+
+import { Select, Switch } from "antd";
+import { DripTableExtraOptions, DripTableSchema } from "drip-table";
+import DripTableGeneratorProvider from "drip-table-generator";
+import React, { useState } from "react";
+
+const schema = {
+  columns: [
+    {
+      key: "mock_1",
+      title: "商品名称",
+      dataIndex: "name",
+      component: "text",
+      options: {
+        mode: "single",
+        maxRow: 1,
+      },
+    },
+    {
+      key: "mock_2",
+      title: "商品详情",
+      align: "center",
+      dataIndex: "description",
+      component: "text",
+      options: {
+        mode: "single",
+        ellipsis: true,
+        maxRow: 1,
+      },
+    },
+  ],
+};
+
+const dataSource = [
+  {
+    id: 1,
+    name: "商品一",
+    price: 7999,
+    status: "onSale",
+    description:
+      "商品是为了出售而生产的劳动成果，是人类社会生产力发展到一定历史阶段的产物，是用于交换的劳动产品。",
+  },
+];
+
+const Demo = () => {
+  const [showToolbar, setShowToolbar] = useState(true);
+  return (
+    <>
+      <span>展示表格工具栏</span>
+      <Switch
+        checkedChildren="开启"
+        unCheckedChildren="关闭"
+        checked={!!showToolbar}
+        onChange={(checked) => setShowToolbar(checked)}
+      />
+      {showToolbar && (
+        <Select
+          mode="tags"
+          style={{ minWidth: "320px" }}
+          options={[
+            { label: "模板(template)", value: "template" },
+            { label: "数据源(datasource)", value: "datasource" },
+            { label: "配置导入(import)", value: "import" },
+            { label: "配置编辑(export)", value: "export" },
+            { label: "预览模式(preview)", value: "preview" },
+          ]}
+          onChange={(v) => setShowToolbar(v)}
+        />
+      )}
+      <DripTableGeneratorProvider
+        schema={schema}
+        dataSource={dataSource}
+        mode={"page"}
+        showToolbar={showToolbar}
+        height={480}
+      />
+    </>
+  );
+};
+
+export default Demo;
+```

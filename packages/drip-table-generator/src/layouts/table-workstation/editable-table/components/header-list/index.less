@@ -1,0 +1,108 @@
+/**
+ * This file is part of the drip-table project.
+ * @link     : https://drip-table.jd.com/
+ * @author   : helloqian12138 (johnhello12138@163.com)
+ * @modifier : helloqian12138 (johnhello12138@163.com)
+ * @copyright: Copyright (c) 2020 JD Network Technology Co., Ltd.
+ */
+
+@import url("../../../../../styles/index.less");
+
+@prefixCls: jfe-drip-table-generator-workstation-table-header;
+
+.@{prefixCls}-wrapper {
+  display: flex;
+  align-items: center;
+
+  &.invisible {
+    .@{prefixCls}-item {
+      opacity: .7;
+      background:
+        linear-gradient(
+          45deg,
+          var(--drip-table-background-color, @background-color) 0,
+          var(--drip-table-background-color, @background-color) 10%,
+          transparent 10%,
+          transparent 20%,
+          var(--drip-table-background-color, @background-color) 20%,
+          var(--drip-table-background-color, @background-color) 30%,
+          transparent 30%,
+          transparent 40%,
+          var(--drip-table-background-color, @background-color) 40%,
+          var(--drip-table-background-color, @background-color) 50%,
+          transparent 50%,
+          transparent 60%,
+          var(--drip-table-background-color, @background-color) 60%,
+          var(--drip-table-background-color, @background-color) 70%,
+          transparent 70%,
+          transparent 80%,
+          var(--drip-table-background-color, @background-color) 80%,
+          var(--drip-table-background-color, @background-color) 90%,
+          transparent 90%,
+          transparent 100%
+        );
+    }
+  }
+
+  &.small {
+    line-height: 35px;
+    height: 35px;
+  }
+
+  &.middle,
+  &.default {
+    line-height: 48px;
+    height: 48px;
+  }
+
+  &.large {
+    line-height: 56px;
+    height: 56px;
+  }
+}
+
+.@{prefixCls}-add-item {
+  color: #000000d9;
+  font-weight: 500;
+  background: #f5f5f5;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid #e0e0e0;
+  transition: all .3s ease;
+  height: 48px;
+  padding: 0 12px;
+  min-width: 120px;
+  text-align: center;
+
+  &.small {
+    height: 35px;
+    padding: 0 8px;
+  }
+
+  &.middle,
+  &.default {
+    height: 48px;
+    padding: 0 12px;
+  }
+
+  &.large {
+    height: 56px;
+    padding: 0 16px;
+  }
+}
+
+.@{prefixCls}-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: 0;
+  margin-left: 1px;
+  display: flex;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    display: none;
+  }
+}
+
+.@{prefixCls}-left-fixed-part {
+  position: sticky;
+  left: 0;
+}

@@ -1,6 +1,6 @@
 /**
- * This file is part of the jd-mkt5 launch.
- * @link     : https://ace.jd.com/
+ * This file is part of the drip-table project.
+ * @link     : https://drip-table.jd.com/
  * @author   : qianjing29 (qianjing29@jd.com)
  * @modifier : qianjing29 (qianjing29@jd.com)
  * @copyright: Copyright (c) 2020 JD Network Technology Co., Ltd.
@@ -8,16 +8,14 @@
 import { InputNumber } from 'antd';
 import React from 'react';
 
-import { DTGComponentPropertySchema } from '@/typing';
+import { DTGComponentBaseProperty } from '..';
 
-interface Props {
-  schema: DTGComponentPropertySchema;
-  value?: number;
-  onChange?: (value: number) => void;
-  onValidate?: (errorMessage: string) => void;
+interface Props extends DTGComponentBaseProperty<number | undefined> {
 }
 
 export default class InputNumberComponent extends React.PureComponent<Props> {
+  public static componentName = 'number';
+
   public render() {
     const config = this.props.schema;
     const uiProps = this.props.schema['ui:props'] || {};
@@ -31,17 +29,18 @@ export default class InputNumberComponent extends React.PureComponent<Props> {
         value={this.props.value}
         placeholder={uiProps.placeholder as string}
         disabled={uiProps.disabled as boolean}
-        style={{ width: 420, ...uiProps.style }}
+        style={{ width: 120, ...uiProps.style }}
         onChange={(value) => {
-          this.props.onChange?.(Number(value));
+          const formedValue = value === void 0 || value === null ? void 0 : Number(value);
+          this.props.onChange?.(formedValue);
           if (config.validate) {
-            const res = config.validate(Number(value));
+            const res = config.validate(formedValue);
             (res instanceof Promise ? res : Promise.resolve(res))
               .then((msg) => {
                 this.props.onValidate?.(msg);
                 return msg;
               })
-              .catch((error) => { throw error; });
+              .catch((error: unknown) => { throw error; });
           }
         }}
       />

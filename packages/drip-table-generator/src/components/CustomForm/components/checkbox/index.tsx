@@ -1,31 +1,27 @@
 /**
- * This file is part of the jd-mkt5 launch.
- * @link     : https://ace.jd.com/
+ * This file is part of the drip-table project.
+ * @link     : https://drip-table.jd.com/
  * @author   : qianjing29 (qianjing29@jd.com)
  * @modifier : qianjing29 (qianjing29@jd.com)
  * @copyright: Copyright (c) 2020 JD Network Technology Co., Ltd.
  */
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { Checkbox, Popover } from 'antd';
-import { DripTableDriver } from 'drip-table';
+import { Checkbox, CheckboxOptionType, Popover } from 'antd';
 import React from 'react';
 
 import { filterAttributes } from '@/utils';
-import { DTGComponentPropertySchema } from '@/typing';
+
+import { DTGComponentBaseProperty } from '..';
 
 type CheckboxGroupProps = React.ComponentProps<typeof Checkbox.Group>;
 type CheckboxValueType = CheckboxGroupProps['value'];
-type CheckboxOptionType = NonNullable<CheckboxGroupProps['options']>[number] & { description?: string; icon?: string };
+type CheckboxOption = CheckboxOptionType & { description?: string; icon?: string };
 
-interface Props {
-  theme?: DripTableDriver;
-  schema: DTGComponentPropertySchema;
-  value?: CheckboxValueType;
-  onChange?: (value: CheckboxValueType) => void;
-  onValidate?: (errorMessage: string) => void;
-}
+interface Props extends DTGComponentBaseProperty<CheckboxValueType> {}
 
 export default class CheckboxComponent extends React.PureComponent<Props> {
+  public static componentName = 'checkbox';
+
   private get options() {
     const uiProps = this.props.schema['ui:props'] || {};
     if (Array.isArray(uiProps.options)) {
@@ -35,7 +31,7 @@ export default class CheckboxComponent extends React.PureComponent<Props> {
   }
 
   private iconRender(iconName: string) {
-    const icons = this.props.theme?.icons || {};
+    const icons = this.props.icons?.icons || {};
     const Icon = icons[iconName];
     return Icon ? <Icon /> : null;
   }
@@ -53,8 +49,8 @@ export default class CheckboxComponent extends React.PureComponent<Props> {
           this.props.onChange?.(value);
         }}
       >
-        { (this.options as CheckboxOptionType[])?.map((option, i) => {
-          if (typeof option === 'string') {
+        { (this.options as CheckboxOption[])?.map((option, i) => {
+          if (typeof option === 'string' || typeof option === 'number') {
             option = { label: option, value: option };
           }
           return (

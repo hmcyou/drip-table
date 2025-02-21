@@ -1,15 +1,26 @@
 {
   "name": "drip-table",
-  "version": "1.2.1",
+  "version": "3.2.2",
   "description": "A tiny and powerful enterprise-class solution for building tables.",
-  "main": "dist/index.js",
-  "module": "dist/index.esm.js",
-  "types": "dist/index.d.ts",
-  "typings": "dist/index.d.ts",
+  "main": "dist/index.min.js",
+  "module": "lib/index.js",
+  "unpkg": "dist/index.min.js",
+  "types": "lib/index.d.ts",
+  "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./lib/index.js",
+      "import": "./es/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./dist/index.css": "./dist/index.min.css",
+    "./dist/index.min.css": "./dist/index.min.css"
+  },
   "scripts": {
-    "build": "father-build && tsc-alias -p tsconfig.json",
+    "build": "father build && node ./post-build.js",
+    "dev": "father dev",
     "analyze": "ANALYZE=1 dumi dev",
-    "prepare": "yarn build",
+    "prepare": "yarn build && yarn lint",
     "postpublish": "git push --tags",
     "lint": "yarn run eslint && yarn run tslint && yarn run stylelint",
     "lint:fix": "yarn run eslint:fix && yarn run stylelint:fix",
@@ -24,23 +35,46 @@
     "stylelint:commit": "stylelint --custom-formatter=../../node_modules/stylelint-formatter-pretty"
   },
   "dependencies": {
-    "cheerio": "^1.0.0-rc.10",
-    "classnames": "^2.3.1",
-    "domhandler": "^4.3.0",
-    "lodash": "^4.17.21",
-    "rc-resize-observer": "^1.0.1",
-    "react-dom": "^16.9.0",
-    "react-window": "^1.8.6",
-    "viewerjs": "1.7.1"
+    "ajv": "8.11.2",
+    "ajv-keywords": "5.1.0",
+    "cheerio": "1.0.0-rc.12",
+    "classnames": "2.3.2",
+    "domhandler": "5.0.3",
+    "lodash": "4.17.21",
+    "moment": "2.29.4",
+    "rc-checkbox": "2.3.2",
+    "rc-dialog": "9.0.2",
+    "rc-dropdown": "4.0.1",
+    "rc-image": "7.6.0",
+    "rc-input": "0.2.2",
+    "rc-input-number": "7.4.0",
+    "rc-menu": "9.8.2",
+    "rc-pagination": "3.2.0",
+    "rc-picker": "3.1.4",
+    "rc-resize-observer": "1.2.1",
+    "rc-select": "14.2.0",
+    "rc-switch": "4.1.0",
+    "rc-table": "7.28.3",
+    "rc-textarea": "0.4.7",
+    "rc-tooltip": "5.2.2",
+    "rc-util": "5.27.1",
+    "react-clipboard.js": "2.0.16",
+    "react-event-injector": "1.1.2",
+    "react-window": "1.8.8",
+    "uuid": "9.0.0",
+    "viewerjs": "1.11.1"
   },
   "devDependencies": {
+    "@types/react-dom": ">=16.9.0",
     "@types/react-window": "^1.8.5",
-    "father-build": "^1.20.4",
-    "tsc-alias": "^1.4.2",
-    "typescript": "^4.5.4"
+    "@types/uuid": "^9.0.0",
+    "father": "^4.1.2",
+    "terser-webpack-plugin": "^5.3.7",
+    "typescript": "^4.9.4"
   },
   "peerDependencies": {
-    "react": ">=16.9.0"
+    "react": ">=16.9.0",
+    "react-dom": ">=16.9.0"
   },
   "keywords": [
     "DripTable",
@@ -52,7 +86,9 @@
   ],
   "files": [
     "*.md",
-    "dist"
+    "dist",
+    "es",
+    "lib"
   ],
   "homepage": "https://drip-table.jd.com",
   "license": "MIT",

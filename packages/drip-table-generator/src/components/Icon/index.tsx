@@ -1,6 +1,6 @@
 /**
- * This file is part of the jd-mkt5 launch.
- * @link     : https://ace.jd.com/
+ * This file is part of the drip-table project.
+ * @link     : https://drip-table.jd.com/
  * @author   : qianjing29 (qianjing29@jd.com)
  * @modifier : qianjing29 (qianjing29@jd.com)
  * @copyright: Copyright (c) 2020 JD Network Technology Co., Ltd.
@@ -8,14 +8,14 @@
 
 import cheerio, * as Cheerio from 'cheerio';
 import * as DOMHandler from 'domhandler';
-import { DripTableDriver } from 'drip-table';
+import { DripTableProps, DripTableRecordTypeBase } from 'drip-table';
 import React from 'react';
 
 interface IconProps {
   className?: string;
   style?: React.CSSProperties;
   name?: string;
-  driver?: DripTableDriver;
+  icons?: DripTableProps<DripTableRecordTypeBase>['icons'];
   svg?: React.ReactSVG | string;
 }
 
@@ -122,12 +122,12 @@ export default class Icon extends React.PureComponent<IconProps> {
         });
       }
       const props: Record<string, unknown> = {
-        // normal props
+        // normal props 通用属性
         ...Object.fromEntries(
           Object.entries(attribs)
             .filter(([k, v]) => !HIDDEN_TAG_PROP_NAME.has(k)),
         ),
-        // static props
+        // static props 静态属性
         key,
         style,
         className: attribs.class,
@@ -152,11 +152,11 @@ export default class Icon extends React.PureComponent<IconProps> {
       return prevVal;
     }
     return prevVal;
-  }
+  };
 
   public renderByName() {
-    if (this.props.name && this.props.driver) {
-      const DriverIcon = this.props.driver.icons[this.props.name] as React.ComponentClass;
+    if (this.props.name && this.props.icons) {
+      const DriverIcon = this.props.icons[this.props.name] as React.ComponentClass;
       if (DriverIcon) {
         return <DriverIcon />;
       }

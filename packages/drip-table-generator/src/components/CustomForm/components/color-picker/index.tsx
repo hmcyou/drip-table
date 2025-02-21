@@ -6,22 +6,18 @@
  * @copyright: Copyright (c) 2020 JD Network Technology Co., Ltd.
  */
 import 'rc-color-picker/assets/index.css';
+import './index.less';
 
 import ColorPicker from 'rc-color-picker';
 import React from 'react';
 
-import { DTGComponentPropertySchema } from '@/typing';
+import { DTGComponentBaseProperty } from '..';
 
-import styles from './index.module.css';
-
-interface Props {
-  schema: DTGComponentPropertySchema;
-  fieldOptions?: { label: string; value: string }[];
-  value?: string;
-  onChange?: (value: string) => void;
-}
+interface Props extends DTGComponentBaseProperty<string> {}
 
 export default class ColorPickerComponent extends React.PureComponent<Props> {
+  public static componentName = 'color-picker';
+
   /**
    * 将alpha通道值(透明度)转成16进制字符串
    *
@@ -67,11 +63,11 @@ export default class ColorPickerComponent extends React.PureComponent<Props> {
         defaultAlpha={100}
         color={this.props.value}
         defaultColor={uiProps.defaultColor || '#000000'}
-        onChange={(colors) => {
-          this.props.onChange?.(colors.color + this.alphaToHex(colors.alpha));
+        onChange={(event) => {
+          this.props.onChange?.(event.color + this.alphaToHex(event.alpha));
         }}
       >
-        <span className={styles.trigger} />
+        <span className="jfe-drip-table-generator-color-picker-trigger" />
       </ColorPicker>
     );
   }

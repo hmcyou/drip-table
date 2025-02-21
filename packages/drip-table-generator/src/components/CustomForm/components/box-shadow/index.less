@@ -1,0 +1,58 @@
+@prefixCls: jfe-drip-table-generator-box-shadow;
+@prefixClsAnt: ant;
+
+.@{prefixCls}-picker-trigger {
+  border: 1px solid #999999;
+  display: inline-block;
+  padding: 2px;
+  border-radius: 2px;
+  user-select: none;
+  width: 34px;
+  height: 32px;
+  cursor: pointer;
+  box-shadow: 0 0 0 2px #ffffff inset;
+  margin-right: 6px;
+}
+
+.@{prefixCls}-container {
+  display: flex;
+  flex-wrap: wrap;
+
+  .@{prefixCls}-item-container {
+    display: flex;
+    position: relative;
+    margin-right: 8px;
+    width: 52px;
+
+    .@{prefixCls}-number-input {
+      width: 26px;
+      height: 32px;
+      line-height: 30px;
+
+      input {
+        padding: 0 2px;
+      }
+    }
+
+    .@{prefixCls}-select-input {
+      width: 26px;
+      height: 32px;
+
+      .@{prefixClsAnt}-select-selector {
+        padding: 0 2px;
+      }
+
+      .@{prefixClsAnt}-select-item {
+        padding: 4px 2px;
+      }
+    }
+
+    .@{prefixCls}-minus {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      cursor: pointer;
+      z-index: 1;
+    }
+  }
+}

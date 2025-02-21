@@ -1,0 +1,55 @@
+/**
+ * This file is part of the drip-table project.
+ * @link     : https://drip-table.jd.com/
+ * @author   : helloqian12138 (johnhello12138@163.com)
+ * @modifier : helloqian12138 (johnhello12138@163.com)
+ * @copyright: Copyright (c) 2020 JD Network Technology Co., Ltd.
+ */
+
+@import url("../../../../styles/index.less");
+
+@prefixCls: jfe-drip-table-generator-dropdown;
+
+.@{prefixCls}-wrapper {
+  display: inline-block;
+}
+
+.@{prefixCls}-button {
+  background-color: var(--drip-table-primary-color, @primary-color);
+  border-color: var(--drip-table-border-color, @border-color);
+  box-shadow: 0 -2px 4px -2px rgb(0 0 0 / 57%);
+
+  &:hover,
+  &:focus {
+    background-color: var(--drip-table-primary-color, @primary-color);
+    border-color: var(--drip-table-border-color, @border-color);
+  }
+}
+
+.@{prefixCls}-arrow {
+  height: 10px;
+  background-color: var(--drip-table-primary-color, @primary-color);
+  position: absolute;
+  width: 73px;
+}
+
+.@{prefixCls}-connector {
+  position: absolute;
+  bottom: 0;
+  transition: all ease-in-out .25s;
+}
+
+.@{prefixCls}-body {
+  position: absolute;
+  background: #ffffff;
+  border-top: 1px solid var(--drip-table-border-color, @border-color);
+  padding: 10px;
+  margin-top: 10px;
+  left: 0;
+  border-radius: 0 0 8px 8px;
+  z-index: 10;
+
+  &.page-mode {
+    box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%), 0 9px 28px 8px rgb(0 0 0 / 5%);
+  }
+}

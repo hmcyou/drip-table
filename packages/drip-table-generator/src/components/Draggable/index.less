@@ -1,0 +1,21 @@
+@prefixCls: jfe-drip-table-generator-draggable;
+
+.@{prefixCls} {
+  &-container {
+    display: flex;
+    flex-flow: row wrap;
+    min-width: 800px;
+  }
+
+  &-droppedcontent {
+    border: 0 solid transparent;
+  }
+
+  &-droppingcontent {
+    border: 1px dashed #0a7bde;
+    box-shadow: 0 0 8px #0a7bdecc;
+    padding: 6px;
+    background-color: #fafafa;
+    border-radius: 5%;
+  }
+}
